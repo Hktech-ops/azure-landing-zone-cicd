@@ -8,5 +8,5 @@ provider "azurerm" {
     }
   }
 
-  use_oidc = true # without this, terraform will authenticate using CLI (by default), but we want it by OIDC
+  use_oidc = true # without this, terraform will authenticate using CLI (by default, that will fail), but we want it by OIDC
 }

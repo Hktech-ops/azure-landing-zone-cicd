@@ -1,9 +1,3 @@
-# env/*/providers.tf
-
-#**/.terraform/
-#**/.terraform.lock.hcl
-#**/.tfstate
-
 .terraform/
 *.tfstate.*
 .terraform.lock.hcl

@@ -8,7 +8,7 @@ Specifically, it controls definining users (data sources), creating groups and a
 
 /* Goal:
  - import users (data sources) that are already present in Entra ID
- - assign Entra ID roles (privileged) roles to select 
+ - **** assign Entra ID roles (privileged) roles to select users
  - create groups - Sql admins, KV Admins, ACR managers, Storage A/C Contributor, Virtual Machine Administrator
  - add members to groups
 */
@@ -29,7 +29,7 @@ data "azuread_user" "harsh" {
   user_principal_name = "harsh@miketechnical70gmail.onmicrosoft.com"
 }
 
-# ------------------------------------
+/* # ------------------------------------
 # Create a group - User Administrators : Primary admin for user lifecycle management
 # Added user to this group
 # Assigned Entra ID role 'User Administrator' to this group
@@ -85,7 +85,7 @@ resource "azuread_directory_role" "groups_administrator" {
 resource "azuread_directory_role_assignment" "groups_admin_assignment_groups_admin_group" {
   role_id             = azuread_directory_role.groups_administrator.object_id
   principal_object_id = azuread_group.group_admins_group.object_id
-}
+} */
 
 
 # ------------------------------------

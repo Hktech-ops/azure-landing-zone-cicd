@@ -147,7 +147,7 @@ resource "azurerm_monitor_diagnostic_setting" "cnsoln_activity_logs" {
 resource "azurerm_monitor_action_group" "critical_action_group" {
   resource_group_name = var.rg_name
   name                = var.critical_action_group_name
-  short_name          = "${var.critical_action_group_name}"
+  short_name          = var.critical_action_group_short_name
 
   email_receiver {
     name                    = "send-to-owner"

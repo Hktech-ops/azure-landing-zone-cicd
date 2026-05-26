@@ -39,6 +39,10 @@ variable "critical_action_group_name" {
   type    = string
   default = "critical-action-group"
 }
+variable "critical_action_group_short_name" {
+  type = string
+  default = "cag"
+}
 variable "alert_reciever_email" {
   type = string
   default = "harsh.hk.ca@outlook.com"

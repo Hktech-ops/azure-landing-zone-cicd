@@ -44,6 +44,11 @@ in my Github repo > secrets and variables > actions
 
 This completes both Azure part + GitHub part for 2 way comminication b/w Azure and Service Principal (GitHub)
 */
+
+/* 
+Directory.Read.All
+Group.Read.Write.All granted these 2 Graph API permissions to SP!!!
+ */ 
 # --------------------------------------------
 
 # --------------------------
@@ -77,7 +82,7 @@ resource "azuread_application_federated_identity_credential" "github-oidc" {
 
 # -------------------------------------------------
 # RBAC roles at scope 'Subscription'
-# --------------------------------
+# ------------------------------------------------
 # Contributor RBAC role to sp at scope 'Subscription'
 resource "azurerm_role_assignment" "contributor_to_github_sp" {
   scope                = "/subscriptions/${var.subscription_id}"
@@ -107,9 +112,5 @@ resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp" 
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "Storage Blob Data Contributor"
 }
-/* # Storage Blob Data Contributor RBAC role to sp at Container level - one where state file is stored
-resource "azurerm_role_assignment" "blob_data_contributor_container_to_gitub_sp" {
-  scope                = "/subscriptions/${var.subscription_id}/resourceGroups/bluepeak-alz-remote-backend/providers/Microsoft.Storage/storageAccounts/bluepeakrbestorage/blobServices/default/containers/bluepeak-alz-tfstate"
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azuread_service_principal.github_sp.object_id
-} */
+
+

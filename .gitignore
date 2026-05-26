@@ -1,0 +1,11 @@
+# env/*/providers.tf
+
+#**/.terraform/
+#**/.terraform.lock.hcl
+#**/.tfstate
+
+.terraform/
+*.tfstate.*
+.terraform.lock.hcl
+
+# *.tfvars - in real world scenario - i would ignore it!

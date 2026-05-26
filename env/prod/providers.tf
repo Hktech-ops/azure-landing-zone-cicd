@@ -7,4 +7,6 @@ provider "azurerm" {
       recover_soft_deleted_key_vaults = true
     }
   }
+
+  use_oidc = true # without this, terraform will authenticate using CLI (by default), but we want it by OIDC
 }

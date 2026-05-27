@@ -52,7 +52,7 @@ This completes both Azure part + GitHub part for 2 way comminication b/w Azure a
 Directory.Read.All
 Group.ReadWrite.All granted these 2 Graph API permissions to SP via portal!
  */
-# ---------------------------------------------
+# ----------------------------------------------
 
 # --------------------------
 # Create an App registration
@@ -130,13 +130,6 @@ resource "azurerm_role_assignment" "user_acces_admin_to_github_sp" {
   role_definition_name = "User Access Administrator"
 }
 
-/* # Owner RBAC role to sp at Tenant RG scope
-resource "azurerm_role_assignment" "owner_to_github_sp" {
-  scope                = var.tenant_root_group_id
-  principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
-  role_definition_name = "Owner"
-}
- */
 # ---------------------------------------
 # Role --> at Storage A/C level
 # Storage Blob Data Contributor - Data plane RBAC role for SP at scope 'storage account' - remote backend storage a/c

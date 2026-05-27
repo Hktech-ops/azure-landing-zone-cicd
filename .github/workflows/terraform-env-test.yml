@@ -4,7 +4,7 @@
 
 # ----------------------------------
 
-name: "Terraform plan and apply for provisioning infra in env - prod"
+name: "Terraform init, fmt, plan and apply for provisioning infra in env - prod"
 
 on:
   push:

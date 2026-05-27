@@ -6,11 +6,18 @@ Goal is to create:
  - Federated Credential for GitHub
  - Service principal
  - Roles/permissions to Service Principal
+  - Resource level (RBAC) roles at scope 'Subscription'
+  - Resource level (RBAC) + Entra ID roles at scope 'Tenant Root Group'
+  - Microsoft Graph API Permissions --> these are Tenant wide permissions - via portal ONLY, Admin concent granted
+    - Directory.Read.All --> to read directory data - used in module: iam
+    - Group.ReadWrite.All --> to read and write all groups - used in module: iam
+
+  - Storage Data Blob Contributor RBAC role to SP at scope 'Storage Account' --> Data Plane role for accssing Remote backend
 */
 
 /* Roles for service principal:
-Why these 4 RBAC roles to SP? 3 
-** 3 Control Plane roles at subscription level - Contributor, Resource Policy Contributor, User Access Administrator
+Why these RBAC roles to SP?  
+** 2 RBAC roles at subscription scope - Contributor, Resource Policy Contributor
 ** 1 Data Plane role - Storage Blob Data Contributor at scope Storage Account - for accessing remote backend
     Why? SP needs to access storage account for writing remote backend file
 
@@ -19,19 +26,15 @@ Why these 4 RBAC roles to SP? 3
   - Covers 95% of terraform operations such as create, update, delete, deploy resources etc...
  - Resource Policy Contributor
   - Useful for policy assignments - policies module
- - User Access Administrator
-  - assign/remove roles to identities
 
 
 IMP - identity (User/SP) provisioning Mangement Group (or any operations) under Tenant Root Group needs to have these 3 roles assigned at the Tenant Root group scope
 
- - Management Group Contributor - allows User/SP to create/modify/manage Management Groups
- - Directory Reader - allows User/SP to read tenant info
- - User Access Administrator : allows assigning RBAC roles are MG, Subscription, Resources Scope
+ - Management Group Contributor (RBAC role) - allows User/SP to create/modify/manage Management Groups
+ - Directory Reader (Entra ID role) : allows User/SP to read tenant info
+ - User Access Administrator (RBAC role) : allows assigning RBAC roles are MG, Subscription, Resources Scope
 
-- If a user is a Global Admin - such as in my case, need to go to Entra ID > Properties and Turn ON Access management for Azure resources --> this will take care for the user!
- - Why? This is ARM plane permisison, which is different than Control Place or Data Plane
- - Remember, ARM Plane role are highly privileged roles - typically used to manage Management groups
+- If a user is a Global Admin - such as in my case, need to go to Entra ID > Properties and Turn ON Access management for Azure resources --> this will allow managing Tenant Root Group access controls (IAM)
 
 */
 
@@ -47,8 +50,8 @@ This completes both Azure part + GitHub part for 2 way comminication b/w Azure a
 
 /* 
 Directory.Read.All
-Group.Read.Write.All granted these 2 Graph API permissions to SP!!!
- */ 
+Group.ReadWrite.All granted these 2 Graph API permissions to SP via portal!
+ */
 # --------------------------------------------
 
 # --------------------------
@@ -57,7 +60,7 @@ Group.Read.Write.All granted these 2 Graph API permissions to SP!!!
 resource "azuread_application" "github" {
   display_name = var.azuread_app_github
 
-  tags = [ "HK", "Prod" ]
+  tags = ["HK", "Prod"]
 }
 
 # --------------------------------
@@ -66,7 +69,7 @@ resource "azuread_application" "github" {
 resource "azuread_service_principal" "github_sp" {
   client_id = azuread_application.github.client_id // client id is generated as soon as an app is registered
 
-  tags = [ "HK", "Prod" ]
+  tags = ["HK", "Prod"]
 }
 
 # --------------------------------
@@ -95,16 +98,43 @@ resource "azurerm_role_assignment" "resource_policy_contributor_to_github_sp" {
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "Resource Policy Contributor"
 }
-# User Access Administrator RBAC role to sp
+
+# -----------------------------------------------------------
+# 2 RBAC roles & 1 Entra ID role to SP at scope 'Tenant Root Group'
+#  - Management Group Contributor
+#  - Directory Reader (Entra ID role)
+#  - User Access Administrator
+# Why? module: platform has to provision its mg hierarcy + assign subscription to one of the child mgs
+# ------------------------------------------------------------
+# --------------------------------------------
+# Tenant Root Group id - CLI: az account management-group list -o table & 
+# CLI - az account management-group show --name --query id
+# --------------------------------------------
+# Management Group Contributor (RBAC) role to SP at Tenant RG scope
+resource "azurerm_role_assignment" "mg_contributor_to_github_sp" {
+  scope                = var.tenant_root_group_id
+  principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
+  role_definition_name = "Management Group Contributor"
+}
+
+# Directory Reader (Entra ID Role) role to SP at Tenant RG scope
+resource "azuread_directory_role_assignment" "directory_reader_to_github_sp" {
+  role_id             = "76fd2fa4-f486-40d4-bbf0-925318e32581" //ID of Directory Readers role
+  principal_object_id = azuread_service_principal.github_sp.object_id
+}
+
+# User Access Administrator (RBAC) role to SP at Tenant RG scope
 resource "azurerm_role_assignment" "user_acces_admin_to_github_sp" {
-  scope                = "/subscriptions/${var.subscription_id}"
+  scope                = var.tenant_root_group_id
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "User Access Administrator"
 }
 
-# ------------------------------
-# RBAC roles for SP at Storage A/C // + Container scope
-# ------------------------------
+
+# ---------------------------------------
+# Role --> at Storage A/C level
+# Storage Blob Data Contributor - Data plane RBAC role for SP at scope 'storage account' - remote backend storage a/c
+# ----------------------------------------
 # Storage Blob Data Contributor RBAC role to sp at Storage A/C level
 resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp" {
   // id of remote backend storage account (CLI - az storage account show --rgname --name --query id)

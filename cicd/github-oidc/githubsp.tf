@@ -52,7 +52,7 @@ This completes both Azure part + GitHub part for 2 way comminication b/w Azure a
 Directory.Read.All
 Group.ReadWrite.All granted these 2 Graph API permissions to SP via portal!
  */
-# --------------------------------------------
+# ---------------------------------------------
 
 # --------------------------
 # Create an App registration

@@ -1,6 +1,6 @@
 # main.tf for env: prod
 
-# ------------------------------------
+# -------------------------------------
 
 module "platform" {
   source = "../../modules/platform"

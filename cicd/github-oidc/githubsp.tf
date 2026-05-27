@@ -36,6 +36,12 @@ IMP - identity (User/SP) provisioning Mangement Group (or any operations) under 
 
 - If a user is a Global Admin - such as in my case, need to go to Entra ID > Properties and Turn ON Access management for Azure resources --> this will allow managing Tenant Root Group access controls (IAM)
 
+More roles - both for Monitoring module:
+ - Monitoring Contributor (RBAC) role at Tenant RG scope
+  - Why? Monitoring Contributor grants Azure Monitor/RBAC permissions to create and manage the diagnostic settings
+ - Security Administrator (Entra ID role) at Tenant RG scope
+  - Why? Security Administrator grants Entra security/diagnostic-plane access
+
 */
 
 /* 
@@ -116,19 +122,34 @@ resource "azurerm_role_assignment" "mg_contributor_to_github_sp" {
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "Management Group Contributor"
 }
-
-# Directory Reader (Entra ID Role) role to SP at Tenant RG scope
-resource "azuread_directory_role_assignment" "directory_reader_to_github_sp" {
-  role_id             = "76fd2fa4-f486-40d4-bbf0-925318e32581" //ID of Directory Readers role
-  principal_object_id = azuread_service_principal.github_sp.object_id
-}
-
 # User Access Administrator (RBAC) role to SP at Tenant RG scope
 resource "azurerm_role_assignment" "user_acces_admin_to_github_sp" {
   scope                = var.tenant_root_group_id
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "User Access Administrator"
 }
+# Monitoring Contributor (RBAC) role to SP at Tenant RG scope
+resource "azurerm_role_assignment" "monitoring_contributor_to_github_sp" {
+  scope                = var.tenant_root_group_id
+  principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
+  role_definition_name = "Monitoring Contributor"
+}
+
+
+# ----------------------------------
+# Entra ID roles to SP at scope - Tenant RG
+# ----------------------------------
+# Directory Reader (Entra ID Role) role to SP at Tenant RG scope
+resource "azuread_directory_role_assignment" "directory_reader_to_github_sp" {
+  role_id             = "76fd2fa4-f486-40d4-bbf0-925318e32581" //ID of Directory Readers role
+  principal_object_id = azuread_service_principal.github_sp.object_id
+}
+# Security Administrator (Entra ID Role) role to SP at Tenant RG scope
+resource "azuread_directory_role_assignment" "security_admin_to_github_sp" {
+  role_id             = "194ae4cb-b126-40b2-bd5b-6091b380977d" //ID of Security Administrator role
+  principal_object_id = azuread_service_principal.github_sp.object_id
+}
+
 
 # ---------------------------------------
 # Role --> at Storage A/C level

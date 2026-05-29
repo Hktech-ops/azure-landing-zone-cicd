@@ -63,4 +63,10 @@ workload_subnet_cidr = [ "192.168.2.0/24" ]
 # -----------------------------
 # Module: compute
 # -----------------------------
-win_vm_private_ip_address = "192.168.0.4"
+# win_vm_private_ip_address = "192.168.0.4"
+
+
+# -----------------------------
+# Module: paas-resources
+# -----------------------------
+github_client_id = "86d2ea15-3b7f-4942-bf2a-18b122096f26"

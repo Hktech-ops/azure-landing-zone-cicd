@@ -49,7 +49,7 @@ resource "azurerm_windows_virtual_machine" "win_vm" {
   resource_group_name = var.rg_name
   location            = var.rg_location
   name                = var.win_vm_name
-  size                = "Standard_B4as_v2" //Standard_D2s_v3 - 4 vCPUs, 16 gigs of RAM, OS Disk = 1 TB, Data Disk = upto 8 data disks, SSD
+  size                = "Standard_D2s_v3" //Standard_B4as_v2 - 4 vCPUs, 16 gigs of RAM, OS Disk = 1 TB, Data Disk = upto 8 data disks, SSD
   // e2s v3 - 16 gigs of memory and 2 vcpus
 
   admin_username = var.win_vm_name                           //same as vm name

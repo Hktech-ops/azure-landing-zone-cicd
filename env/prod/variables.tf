@@ -103,3 +103,10 @@ variable "workload_subnet_cidr" {
 /* variable "win_vm_private_ip_address" {
   type = string
 } */
+
+# -----------------------------
+# Module: paas-resources
+# -----------------------------
+variable "github_client_id" {
+  type = string
+}

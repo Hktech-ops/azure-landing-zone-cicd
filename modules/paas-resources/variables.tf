@@ -84,8 +84,14 @@ variable "sa_name" {
 }
 variable "first_container_name" {
   type    = string
-  default = "first-container"
+  default = "cnsolns-ctnr"
 }
+
+# for giving RBAC "Storage Blob Data Contributor" to github sp for creating container
+variable "github_client_id" {
+  type = string
+}
+
 // referenced from module - iam
 variable "storage_ac_contributors_group_object_id" {
 }

@@ -153,19 +153,32 @@ module "paas-resources" {
   source = "../../modules/paas-resources"
 
   tenant_id                               = var.tenant_id
+
+  # from module: platform
   rg_name                                 = module.platform.rg_name
   rg_location                             = module.platform.rg_location
+
+  # from module: monitoring
   law_id                                  = module.monitoring.law_id
+
+  # from module: paas-resources
   key_vault_admins_group_object_id        = module.iam.key_vault_admins_group_object_id
   acr_managers_group_object_id            = module.iam.acr_managers_group_object_id
   storage_ac_contributors_group_object_id = module.iam.storage_ac_contributors_group_object_id
 
+  # from module: paas-resources --> keyed value in tfvars
+  github_client_id = var.github_client_id 
+
+  # from module: hub-network
   hub_vnet_id                 = module.hub-network.hub_vnet_id
   spoke_vnet_id               = module.spoke-network.spoke_vnet_id
   private_endpoints_subnet_id = module.hub-network.private_endpoints_subnet_id
 
+  # from module: iam
   sql_admins_object_id  = module.iam.sql_admins_group_object_id
   sql_admins_group_name = module.iam.sql_admins_group_name
+
+  
 }
 
 module "compute" {
@@ -193,7 +206,7 @@ module "compute" {
 
 }
 
-module "app-service" {
+/* module "app-service" {
   source = "../../modules/app-service"
 
   # from module: paltform
@@ -203,4 +216,4 @@ module "app-service" {
   # from module: monitoring
   law_id = module.monitoring.law_id
   
-}
+} */

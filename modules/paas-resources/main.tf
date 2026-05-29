@@ -11,6 +11,9 @@ All 4 PaaS resources have a private DNS zone + private endpoint  --> no public a
 All 4 PaaS resources have diagnostic setting enabled ---> telemetry is sent to central LAW
 list diagnostic-settings available for the resource (CLI): az monitor diagnostic-settings categories list --resource "resource_id"
 
+# Storage Blob Data Contributor RBAC role to SP (GitHub) at Storage A/C level
+# Why? SP needs to create this container as well - so data plane permissions needed for SP
+
 
 All 4 PaaS resources have:
   - NO public access
@@ -128,7 +131,7 @@ resource "azurerm_container_registry" "acr" {
   resource_group_name = var.rg_name
   location            = var.rg_location
   name                = var.acr_name
-  sku                 = "Standard" //Premium
+  sku                 = "Premium" //Standard  --> public access can ONLY be disabled for a premium sku
   admin_enabled       = false     //admin replaced with RBAC roles - ACRPush and ACRPull
 
   public_network_access_enabled = false // change it to true for test
@@ -240,6 +243,20 @@ resource "azurerm_storage_container" "first-container" {
   name                  = var.first_container_name
   container_access_type = "private"
 }
+
+# Storage Blob Data Contributor RBAC role to sp (GitHub) at Storage A/C level
+# Why? SP needs to create this container as well - so data plane permissions needed for SP
+
+// github sp's client id value keyed in tfvars
+data "azuread_service_principal" "github_sp" {
+  client_id = var.github_client_id
+}
+resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp" {
+  scope                = azurerm_storage_account.sa.id   // Storage account id
+  principal_id         = data.azuread_service_principal.github_sp.object_id //object id of github SP
+  role_definition_name = "Storage Blob Data Contributor"
+}
+
 
 # Storage Data Blob Contributor RBAC role to storage a/c contributors group
 resource "azurerm_role_assignment" "storage_blob_data_contributor_role" {

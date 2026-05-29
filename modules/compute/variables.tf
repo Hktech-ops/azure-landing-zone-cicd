@@ -18,6 +18,7 @@ variable "win_vm_nic_name" {
 }
 variable "win_vm_private_ip_address" {  //keyed value in tfvars
   type = string
+  default = ""
 }
 
 # VM variables

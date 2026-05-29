@@ -1,0 +1,55 @@
+# variables.tf for module: app-service
+
+# ------------------------------------------------
+
+# from module: platfrom
+variable "rg_name" {
+}
+variable "rg_location" {
+}
+
+# LAW id - from monitoring module
+variable "law_id" {
+}
+
+# App service plan
+variable "asp_name" {
+  type = string
+  default = "cnsolns-asp-spa"
+}
+
+# Linux Web App
+variable "linux_web_app_spa_name" {
+  type = string
+  default = "cnsolns-spa"
+}
+
+
+# Diagnostic setting for Web App
+variable "linux_web_app_spa_diagnostic_setting_name" {
+  type = string
+  default = ""
+}
+
+
+
+# App settings
+/* variable "APP_ENV" {
+  type = string
+  default = "Prod"
+}
+variable "API_BASE_URI" {
+  type = string
+  default = "https://api.cnsolnsspa.com"
+}
+variable "FEATURE_FLAG_X" {
+  type = string
+  default = "true"
+} */
+
+/* variable "app_settings" {
+  type = map(string)
+  description = "Custom application settings (environment variables) for the App Service"
+  default     = {}
+} */
+

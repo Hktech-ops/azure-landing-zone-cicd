@@ -43,7 +43,6 @@ variable "critical_action_group_short_name" {
   type = string
   default = "cag"
 }
-variable "alert_reciever_email" {
+variable "alert_reciever_email" { //value keyed in tfvars
   type = string
-  default = "harsh.hk.ca@outlook.com"
 }

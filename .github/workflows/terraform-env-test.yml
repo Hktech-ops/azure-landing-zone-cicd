@@ -23,10 +23,12 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_USE_OIDC: true
+  ARM_SKIP_PROVIDER_REGISTRATION: true
 
 jobs:
   terraform-test:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: env/prod
@@ -49,12 +51,12 @@ jobs:
 
       - name: Terraform Init (Backend Injection)
         run: |
-          terraform init -upgrade\
+          terraform init -upgrade \
             -backend-config="resource_group_name=${{ secrets.TFSTATE_RG }}" \
             -backend-config="storage_account_name=${{ secrets.TFSTATE_SA }}" \
             -backend-config="container_name=${{ secrets.TFSTATE_CONTAINER }}" \
-            -backend-config="key=env-prod.tfstate"
-            
+            -backend-config="key=env-prod.tfstate" \
+            -backend-config="use_azuread_auth=true"
 
       - name: Terraform Format
         run: terraform fmt -recursive
@@ -67,3 +69,9 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -var-file="prod.tfvars"
+
+      - name: Deploy SPA to App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: cnsolns-spa
+          package: ../SPA

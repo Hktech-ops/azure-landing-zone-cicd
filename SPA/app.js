@@ -6,11 +6,11 @@ function router() {
 
   switch (route) {
     case "#/":
-      app.innerHTML = "<h1>Home</h1><p>Welcome to my simple SPA running on IIS.</p>";
+      app.innerHTML = "<h1>Home</h1><p>Welcome to my simple SPA deployed via GitHub Actions pipeline.</p>";
       break;
 
     case "#/about":
-      app.innerHTML = "<h1>About</h1><p>This SPA is deployed on an Azure VM inside an ALZ.</p>";
+      app.innerHTML = "<h1>About</h1><p>This SPA is deployed in on Azure App service.</p>";
       break;
 
     case "#/contact":

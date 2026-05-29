@@ -12,8 +12,8 @@ variable "platform_guidelines_policy_set_displayname" {
   default = "platform-guidelines-policy-set"
 }
 
-// Policy assignment variables
-// assignment name - must NOT exceed 24 characters
+# Policy assignment variables
+# assignment name - must NOT exceed 24 characters
 variable "platform_guidelines_to_corp_mg_assignment" {
   type    = string
   default = "guidelines-to-corp-mg"
@@ -27,6 +27,10 @@ variable "platform_guidelines_to_corp_mg_assignment_displayname" {
 variable "workloads_corp_mg_id" {
 }
 
+# Centralized Log Analytics Workspace - referenced from monitoring module
+variable "law_id" {
+}
+
 # =============================
 # Monitoring policy set
 # =============================
@@ -38,12 +42,9 @@ variable "monitoring_policy_set_displayname" {
   type    = string
   default = "monitoring-policy-set"
 }
-# Centralized Log Analytics Workspace - referenced from monitoring module
-variable "law_id" {
-}
 
-// Policy assignment variables
-// assignment name - must NOT exceed 24 characters
+# Policy assignment variables
+# assignment name - must NOT exceed 24 characters
 variable "monitoring_to_corp_mg_assignment" {
   type    = string
   default = "monitoring-to-corp-mg"

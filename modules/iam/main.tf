@@ -29,64 +29,6 @@ data "azuread_user" "harsh" {
   user_principal_name = "harsh@miketechnical70gmail.onmicrosoft.com"
 }
 
-/* # ------------------------------------
-# Create a group - User Administrators : Primary admin for user lifecycle management
-# Added user to this group
-# Assigned Entra ID role 'User Administrator' to this group
-# ------------------------------------
-resource "azuread_group" "user_admins_group" {
-  display_name     = "user-admins"
-  security_enabled = true
-}
-# Add users to user_admin group
-resource "azuread_group_member" "user_admins_group_members" {
-  group_object_id  = azuread_group.user_admins_group.object_id
-  member_object_id = data.azuread_user.harsh.object_id  //object id of the user
-}
-
-# Get Entra ID Role Template
-data "azuread_directory_role_template" "user_administrator" {
-  display_name = "User Administrator"
-}
-# Activate Role in Tenant
-resource "azuread_directory_role" "user_administrator" {
-  template_id = data.azuread_directory_role_template.user_administrator.template_id
-}
-# Assign User Admins Role to User Admins Group
-resource "azuread_directory_role_assignment" "user_admins_assignment_to_user_admins_group" {
-  role_id             = azuread_directory_role.user_administrator.object_id
-  principal_object_id = azuread_group.user_admins_group.object_id //object id of user admins group
-}
-
-
-# ------------------------------------
-# Create a group - Groups Administrators : Controls creation and management of groups
-# Added user to this group
-# Assigned Entra ID role 'Groups Administrator' to this group
-# ------------------------------------
-resource "azuread_group" "group_admins_group" {
-  display_name     = "group-admins"
-  security_enabled = true
-}
-# Add users to user_admin group
-resource "azuread_group_member" "group_admins_group_members" {
-  group_object_id  = azuread_group.group_admins_group.object_id
-  member_object_id = data.azuread_user.harsh.object_id //object id of the user
-}
-# Get Entra ID Role Template
-data "azuread_directory_role_template" "groups_administrator" {
-  display_name = "Groups Administrator"
-}
-# Activate Role in Tenant
-resource "azuread_directory_role" "groups_administrator" {
-  template_id = data.azuread_directory_role_template.groups_administrator.template_id
-}
-# Assign Groups Admin Role to Groups Admin Group
-resource "azuread_directory_role_assignment" "groups_admin_assignment_groups_admin_group" {
-  role_id             = azuread_directory_role.groups_administrator.object_id
-  principal_object_id = azuread_group.group_admins_group.object_id
-} */
-
 
 # ------------------------------------
 # Create a group - SQL admins group
@@ -145,7 +87,7 @@ resource "azuread_group_member" "storage_ac_contributors_group_members" {
 }
 
 # -------------------------------
-# Group - VM admins
+# Group - VM admins : If you happen to deploy VM in the environment!
 # Added user to this group
 # -------------------------------
 resource "azuread_group" "vm_admins_group" {

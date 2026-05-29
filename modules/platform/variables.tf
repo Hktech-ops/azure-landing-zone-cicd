@@ -12,10 +12,6 @@ variable "platform_identity_mg_name" {
   type    = string
   default = "platform-identity-mg"
 }
-/* variable "platform_management_mg_name" {
-  type    = string
-  default = "platform-management-mg"
-} */
 variable "platform_connectivity_mg_name" {
   type    = string
   default = "platform-connectivity-mg"
@@ -53,22 +49,18 @@ variable "tenant_root_group_id" {
 }
 
 # -----------------------
-# RG name and location
+# RG name and location - keyed values in tfvars
 # -----------------------
 variable "rg_name" {
   type    = string
-  default = "cnsolns-azure-landing-zone"
 }
 variable "rg_location" {
   type    = string
-  default = "Canada Central"
 }
 
-
 # --------------------------------
-# Recovery services vault
+# Recovery services vault - keyed value in tfvars
 # --------------------------------
 variable "cnsolns_recovery_services_vault_name" {
   type    = string
-  default = "cnsolns-recovery-services-vault"
 }

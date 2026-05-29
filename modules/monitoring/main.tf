@@ -4,8 +4,8 @@
 structure: will have 1 centralized monitoring module that contains
     - Centralized Log Analytics Workspace (LAW) - ALL logs are sent to this LAW
       - internet ingestion & internet query disabled --> logs can ONLY be accessed via private network. NO PUBLIC query/ingestion
-    - Activity logs (subscription level)
     - Entra ID logs (tenent level)
+    - Activity logs (subscription level)
     - Action groups - email trigger
 
 --> Each resource will have its own diagnostic setting which will send logs to LAW by referencing its id

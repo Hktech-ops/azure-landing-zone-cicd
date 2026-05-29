@@ -40,7 +40,7 @@ resource "azurerm_network_interface" "win_vm_nic" {
     subnet_id                     = var.app_subnet_id // referenced from module: spoke-network
     private_ip_address_allocation = "Static"
     # private IP must be specified when it is static
-    private_ip_address            = var.win_vm_private_ip_address // keyed value in tfvars
+    private_ip_address            = "192.168.0.4" // **keyed value in tfvars
   }
   tags = local.common_tags
 }

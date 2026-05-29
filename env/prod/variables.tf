@@ -95,3 +95,11 @@ variable "workload_subnet_name" {
 variable "workload_subnet_cidr" {
   type = list(string)
 }
+
+
+# -----------------------------
+# Module: compute
+# -----------------------------
+/* variable "win_vm_private_ip_address" {
+  type = string
+} */

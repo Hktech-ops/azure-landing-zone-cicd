@@ -12,10 +12,10 @@ output "win_vm_name" {
   value       = azurerm_windows_virtual_machine.win_vm.name
 }
 
-output "win_vm_private_ip_address" {
+/* output "win_vm_private_ip_address" {
   description = "The private IP address of the VM NIC"
   value       = azurerm_network_interface.win_vm_nic.ip_configuration[0].private_ip_address
-}
+} */
 
 output "win_vm_nic_id" {
   description = "The NIC ID for the Windows VM"

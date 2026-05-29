@@ -17,9 +17,9 @@ variable "app_subnet_cidr" {
 }
 
 # VM private IP - from module: compute
-variable "win_vm_private_ip_address" {
+/* variable "win_vm_private_ip_address" {
 }
-
+ */
 
 
 # Firewall policy variables

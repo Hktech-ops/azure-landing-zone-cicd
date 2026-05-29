@@ -97,7 +97,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "network_rules_cg" {
       name                  = "allow-all-outbound"
       protocols             = ["Any"]
       //referenced from module: spoke-network & keyed in tfvars
-      source_addresses      = [var.app_subnet_cidr] //allowed outbound from app subnet - vm lies inside app subnet
+      source_addresses      = var.app_subnet_cidr //allowed outbound from app subnet - vm lies inside app subnet
       destination_addresses = ["*"]
       destination_ports     = ["*"]
     }
@@ -121,7 +121,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "app_rules_cg" {
     rule {
       name             = "allow-http-https"
       //referenced from module: spoke-network & keyed in tfvars
-      source_addresses = [var.app_subnet_cidr]   // allowed outbound form app subnet - vm lies inside app subnet
+      source_addresses = var.app_subnet_cidr   // allowed outbound form app subnet - vm lies inside app subnet
 
       protocols {
         type = "Http"

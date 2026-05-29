@@ -62,7 +62,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "dnat_rules_cg" {
       destination_ports = ["80"]
       # traffic from internet hits firewall's public ip first
       destination_address = var.platform_firewall_public_ip_address // referenced from module: hub-network
-      translated_address = var.win_vm_private_ip // inbound to vm's private IP: referenced from module: compute
+      translated_address = var.win_vm_private_ip_address // inbound to vm's private IP: referenced from module: compute
       translated_port    = "80"
     }
 
@@ -73,7 +73,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "dnat_rules_cg" {
       destination_ports   = ["443"]
       # traffic from internet hits firewall's public ip first
       destination_address = var.platform_firewall_public_ip_address // referenced from module: hub-network
-      translated_address  = var.win_vm_private_ip // inbound to vm's private IP: referenced from module: compute
+      translated_address  = var.win_vm_private_ip_address // inbound to vm's private IP: referenced from module: compute
       translated_port     = "443"
     }
   }

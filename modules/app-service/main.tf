@@ -45,7 +45,7 @@ resource "azurerm_linux_web_app" "linux_web_app_spa" {
   https_only = true
 
   identity {
-    type = SystemAssigned
+    type = "SystemAssigned"
   }
 
   site_config {

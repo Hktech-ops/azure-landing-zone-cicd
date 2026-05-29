@@ -17,7 +17,7 @@ variable "app_subnet_cidr" {
 }
 
 # VM private IP - from module: compute
-variable "win_vm_private_ip" {
+variable "win_vm_private_ip_address" {
 }
 
 

@@ -93,7 +93,7 @@ resource "azurerm_management_group_policy_assignment" "platform_guidelines_to_co
   // allowed locations - has to be either of the two specified - canadacentral OR canadaeast
   parameters = jsonencode({
     listOfAllowedLocations = {
-      value = ["canadacentral", "canadaeast"] 
+      value = ["canadacentral", "canadaeast", "westus"] 
     }
   }) //allowed locations is an array
 

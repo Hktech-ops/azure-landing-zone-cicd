@@ -89,7 +89,7 @@ module "firewall-policies" {
   app_subnet_cidr = var.app_subnet_cidr
 
   # keyed value in tfvars - win vm private ip defined in module: compute
-  # win_vm_private_ip_address = var.win_vm_private_ip_address
+  win_vm_private_ip_address = var.win_vm_private_ip_address
 
 }
 
@@ -202,7 +202,7 @@ module "compute" {
   vm_admins_group_object_id            = module.iam.vm_admins_group_object_id
   
   # keyed value in tfvars
-  # win_vm_private_ip_address = var.win_vm_private_ip_address
+  win_vm_private_ip_address = var.win_vm_private_ip_address
 
 }
 

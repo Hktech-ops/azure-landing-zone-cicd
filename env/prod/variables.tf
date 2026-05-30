@@ -96,13 +96,12 @@ variable "workload_subnet_cidr" {
   type = list(string)
 }
 
-
 # -----------------------------
 # Module: compute
 # -----------------------------
-/* variable "win_vm_private_ip_address" {
+variable "win_vm_private_ip_address" {
   type = string
-} */
+}
 
 # -----------------------------
 # Module: paas-resources

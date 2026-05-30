@@ -16,7 +16,9 @@ variable "win_vm_nic_name" {
   type    = string
   default = "win-vm-nic"
 }
-variable "win_vm_private_ip_address" {  //keyed value in tfvars
+
+//win vm private IP: keyed value in tfvars
+variable "win_vm_private_ip_address" {  
   type = string
   default = ""
 }

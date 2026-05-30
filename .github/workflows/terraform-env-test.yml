@@ -2,6 +2,12 @@
 
 # -backend-config="use_azuread_auth=true"
 
+#      - name: Deploy SPA to App Service
+#        uses: azure/webapps-deploy@v2
+#        with:
+#          app-name: cnsolns-spa
+#          package: ../SPA
+
 # ----------------------------------
 
 name: "Terraform init, fmt, plan and apply for provisioning infra in env - prod"
@@ -70,8 +76,4 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve -var-file="prod.tfvars"
 
-      - name: Deploy SPA to App Service
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: cnsolns-spa
-          package: ../SPA
+

@@ -162,7 +162,7 @@ resource "azuread_directory_role_assignment" "security_admin_to_github_sp" {
 }
 
 
-# ---------------------------------------
+# ----------------------------------------
 # Role --> at Storage A/C level
 # Storage Blob Data Contributor - Data plane RBAC role for SP at scope 'storage account' - remote backend storage a/c
 # ----------------------------------------

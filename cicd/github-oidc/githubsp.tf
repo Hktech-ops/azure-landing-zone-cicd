@@ -107,14 +107,22 @@ resource "azurerm_role_assignment" "resource_policy_contributor_to_github_sp" {
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "Resource Policy Contributor"
 }
-# Storage Blob Data Contributor RBAC role to SP at scope 'Subscription'
+/* # Storage Blob Data Contributor RBAC role to SP at scope 'Subscription'
 # Why? Data plane role needed to create container - when pipeline deploys infra
 resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp_at_subscr_scope" {
   scope                = "/subscriptions/${var.subscription_id}"   // subscription id
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "Storage Blob Data Contributor"
 }
+ */
 
+# Storage Blob Data Contributor RBAC at scope storage a/c - one in pass resources sa where SP creates a container
+resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp_at_sa_scope" {
+   // id of the sa account provisioned in paas-resources module
+  scope                = "/subscriptions/1c1bf735-bff4-43f7-b6ed-9bfbb87f4840/resourceGroups/cnsolns-azure-landing-zone/providers/Microsoft.Storage/storageAccounts/cnsolutionsalzstoragenew"  
+  principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
+  role_definition_name = "Storage Blob Data Contributor"
+}
 
 # -----------------------------------------------------------
 # 2 RBAC roles & 1 Entra ID role to SP at scope 'Tenant Root Group'

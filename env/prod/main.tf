@@ -181,7 +181,7 @@ module "paas-resources" {
   
 }
 
-module "compute" {
+/* module "compute" {
   source = "../../modules/compute"
 
   # form module: platform
@@ -204,9 +204,9 @@ module "compute" {
   # keyed value in tfvars
   win_vm_private_ip_address = var.win_vm_private_ip_address
 
-}
+} */
 
-/* module "app-service" {
+module "app-service" {
   source = "../../modules/app-service"
 
   # from module: paltform
@@ -216,4 +216,4 @@ module "compute" {
   # from module: monitoring
   law_id = module.monitoring.law_id
   
-} */
+}

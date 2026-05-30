@@ -8,8 +8,17 @@ variable "app_subnet_id" {
 # referenced from module: platform
 variable "rg_name" {
 }
-variable "rg_location" {
+/* variable "rg_location" {
+} */
+
+
+# faced quota issues with 'canadacentral' - so has to deploy VM in a different region
+# All Other resources are in canada central
+variable "vm_deploy_location" {
+  type = string
+  default = "westus"
 }
+
 
 # VM NIC variables
 variable "win_vm_nic_name" {

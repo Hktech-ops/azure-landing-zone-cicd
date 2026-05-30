@@ -109,7 +109,7 @@ resource "azurerm_role_assignment" "resource_policy_contributor_to_github_sp" {
 }
 # Storage Blob Data Contributor RBAC role to SP at scope 'Subscription'
 # Why? Data plane role needed to create container - when pipeline deploys infra
-resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp" {
+resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp_at_subscr_scope" {
   scope                = "/subscriptions/${var.subscription_id}"   // subscription id
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "Storage Blob Data Contributor"

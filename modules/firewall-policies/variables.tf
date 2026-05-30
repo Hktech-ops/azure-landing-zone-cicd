@@ -16,10 +16,11 @@ variable "platform_firewall_public_ip_address" {
 variable "app_subnet_cidr" {
 }
 
-# VM private IP - from module: compute
-/* variable "win_vm_private_ip_address" {
+# VM private IP - keyed value in tfvars
+variable "win_vm_private_ip_address" {
+  type = string
 }
- */
+
 
 
 # Firewall policy variables

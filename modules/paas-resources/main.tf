@@ -244,7 +244,7 @@ resource "azurerm_storage_container" "first-container" {
   container_access_type = "private"
 }
 
-# Storage Blob Data Contributor RBAC role to sp (GitHub) at Storage A/C level
+/* # Storage Blob Data Contributor RBAC role to sp (GitHub) at Storage A/C level
 # Why? SP needs to create this container as well - so data plane permissions needed for SP
 
 // github sp's client id value keyed in tfvars
@@ -256,7 +256,7 @@ resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp" 
   principal_id         = data.azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "Storage Blob Data Contributor"
 }
-
+ */
 
 # Storage Data Blob Contributor RBAC role to storage a/c contributors group
 resource "azurerm_role_assignment" "storage_blob_data_contributor_role" {

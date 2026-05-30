@@ -88,9 +88,9 @@ variable "first_container_name" {
 }
 
 # for giving RBAC "Storage Blob Data Contributor" to github sp for creating container
-variable "github_client_id" {
+/* variable "github_client_id" {
   type = string
-}
+} */
 
 // referenced from module - iam
 variable "storage_ac_contributors_group_object_id" {

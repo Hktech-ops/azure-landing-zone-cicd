@@ -167,7 +167,7 @@ module "paas-resources" {
   storage_ac_contributors_group_object_id = module.iam.storage_ac_contributors_group_object_id
 
   # from module: paas-resources --> keyed value in tfvars
-  github_client_id = var.github_client_id 
+  # github_client_id = var.github_client_id 
 
   # from module: hub-network
   hub_vnet_id                 = module.hub-network.hub_vnet_id

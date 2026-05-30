@@ -17,9 +17,12 @@ Goal is to create:
 
 /* Roles for service principal:
 Why these RBAC roles to SP?  
-** 2 RBAC roles at subscription scope - Contributor, Resource Policy Contributor
+** 2 RBAC roles at subscription scope - Contributor, Resource Policy Contributor, Storage Blob Data Contributor
 ** 1 Data Plane role - Storage Blob Data Contributor at scope Storage Account - for accessing remote backend
     Why? SP needs to access storage account for writing remote backend file
+
+# Storage Blob Data Contributor RBAC role to SP at scope 'Subscription'
+# Why? Data plane role needed to create container - when pipeline deploys infra (module: paas-resources)
 
 --> Each role covers specific capability that Terraform needs:
  - Contributor
@@ -104,6 +107,14 @@ resource "azurerm_role_assignment" "resource_policy_contributor_to_github_sp" {
   principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
   role_definition_name = "Resource Policy Contributor"
 }
+# Storage Blob Data Contributor RBAC role to SP at scope 'Subscription'
+# Why? Data plane role needed to create container - when pipeline deploys infra
+resource "azurerm_role_assignment" "storage_blob_data_contributor_to_github_sp" {
+  scope                = "/subscriptions/${var.subscription_id}"   // subscription id
+  principal_id         = azuread_service_principal.github_sp.object_id //object id of github SP
+  role_definition_name = "Storage Blob Data Contributor"
+}
+
 
 # -----------------------------------------------------------
 # 2 RBAC roles & 1 Entra ID role to SP at scope 'Tenant Root Group'

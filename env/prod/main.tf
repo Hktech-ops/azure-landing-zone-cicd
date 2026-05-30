@@ -186,7 +186,7 @@ module "compute" {
 
   # form module: platform
   rg_name                              = module.platform.rg_name
-  rg_location                          = module.platform.rg_location
+  #rg_location                          = module.platform.rg_location
   cnsolns_recovery_services_vault_name = module.platform.cnsolns_recovery_services_vault_name
 
   # from module: monitoring

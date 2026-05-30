@@ -106,6 +106,6 @@ variable "win_vm_private_ip_address" {
 # -----------------------------
 # Module: paas-resources
 # -----------------------------
-variable "github_client_id" {
+/* variable "github_client_id" {
   type = string
-}
+} */

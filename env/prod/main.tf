@@ -212,7 +212,7 @@ module "compute" {
 
 }
 
-module "app-service" {
+/* module "app-service" {
   source = "../../modules/app-service"
 
   # from module: platform
@@ -223,5 +223,5 @@ module "app-service" {
   law_id = module.monitoring.law_id
 
 }
-
+ */
 

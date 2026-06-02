@@ -1,0 +1,5 @@
+.terraform/
+*.tfstate.*
+.terraform.lock.hcl
+
+# *.tfvars - in real world scenario - i would ignore it!

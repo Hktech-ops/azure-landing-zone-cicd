@@ -355,7 +355,7 @@ resource "azurerm_monitor_diagnostic_setting" "sa_blob_diagnostic_setting" {
 # MSSQL server
 resource "azurerm_mssql_server" "mssql_server" {
   resource_group_name = var.rg_name
-  location            = var.mssql_sql_server_deploy_location  // keyed value in tfvars
+  location = var.mssql_sql_server_deploy_location //deployed in canadacentral due to quota issues
   name                = var.mssql_server_name
   version             = "12.0"
   minimum_tls_version = "1.2"

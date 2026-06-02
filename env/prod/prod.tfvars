@@ -71,6 +71,5 @@ win_vm_private_ip_address = "192.168.0.4"
 # -----------------------------
 github_client_id = "74ed66a6-27ef-476d-b19a-c14a531e525d"
 
-mssql_sql_server_deploy_location = "canadaentral"   //deployed in canadacentral due to quota restrictions in eastus
-
+mssql_sql_server_deploy_location = "canadacentral"
 

@@ -111,3 +111,7 @@ variable "github_client_id" {
   default = null
 }
 
+variable "mssql_sql_server_deploy_location" {
+  type = string
+  default = null
+}

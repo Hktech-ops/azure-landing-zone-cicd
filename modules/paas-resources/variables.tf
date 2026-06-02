@@ -122,6 +122,13 @@ variable "mssql_server_name" {
   type    = string
   default = "mssql-server-cnsolnsnew"
 }
+# deployed SQL server in canadacentral due to quota issues in eastus
+# keyed value in tfvars
+variable "mssql_sql_server_deploy_location" {
+  type = string
+  default = null
+}
+
 variable "mssqldb_name" {
   type    = string
   default = "cnsolutionssqldbnew"

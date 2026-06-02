@@ -5,11 +5,7 @@
 # from module: platfrom
 variable "rg_name" {
 }
-/* variable "rg_location" {
-} */
-variable "appservice_deploy_location" {
-  type = string
-  default = "eastus"
+variable "rg_location" {
 }
 
 # LAW id - from monitoring module

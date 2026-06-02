@@ -103,10 +103,6 @@ variable "win_vm_private_ip_address" {
   type = string
 }
 
-variable "vm_deploy_location" { //also used for app service deployment
-  type = string
-}
-
 # -----------------------------
 # Module: paas-resources (*********)
 # -----------------------------
@@ -115,10 +111,3 @@ variable "github_client_id" {
   default = null
 }
 
-
-# -----------------------------
-# Module: app-service
-# -----------------------------
-variable "appservice_deploy_location" {
-  type = string
-}

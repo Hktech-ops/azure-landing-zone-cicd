@@ -25,7 +25,7 @@ locals {
 # App service plan
 resource "azurerm_service_plan" "asp_spa" {
   resource_group_name = var.rg_name
-  location = var.rg_location //deployed in eastus due to quota issues
+  location = var.rg_location 
   name = var.asp_name
 
   os_type = "Linux"
@@ -38,7 +38,7 @@ resource "azurerm_service_plan" "asp_spa" {
 # Linux Web App
 resource "azurerm_linux_web_app" "linux_web_app_spa" {
   resource_group_name = var.rg_name
-  location = var.rg_location //deployed in eastus due to quota issues
+  location = var.rg_location 
   name = var.linux_web_app_spa_name
   service_plan_id = azurerm_service_plan.asp_spa.id
 

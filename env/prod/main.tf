@@ -1,6 +1,6 @@
 # main.tf for env: prod
 
-# ----------------------------------------------
+# -----------------------------------------------
 
 module "platform" {
   source = "../../modules/platform"
@@ -212,15 +212,16 @@ module "compute" {
 
 }
 
-/* module "app-service" {
+module "app-service" {
   source = "../../modules/app-service"
 
-  # from module: paltform
+  # from module: platform
   rg_name = module.platform.rg_name
   rg_location = module.platform.rg_location
 
   # from module: monitoring
   law_id = module.monitoring.law_id
-  
+
 }
- */
+
+

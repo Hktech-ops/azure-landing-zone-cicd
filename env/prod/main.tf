@@ -160,6 +160,8 @@ module "paas-resources" {
 
   tenant_id                               = var.tenant_id
 
+  mssql_sql_server_deploy_location = var.mssql_sql_server_deploy_location //keyed value in tfvars
+
   # from module: platform
   rg_name                                 = module.platform.rg_name
   rg_location                             = module.platform.rg_location
@@ -167,7 +169,7 @@ module "paas-resources" {
   # from module: monitoring
   law_id                                  = module.monitoring.law_id
 
-  # from module: paas-resources
+  # from module: iam
   key_vault_admins_group_object_id        = module.iam.key_vault_admins_group_object_id
   acr_managers_group_object_id            = module.iam.acr_managers_group_object_id
   storage_ac_contributors_group_object_id = module.iam.storage_ac_contributors_group_object_id

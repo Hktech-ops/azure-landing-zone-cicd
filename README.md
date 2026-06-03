@@ -1,6 +1,6 @@
-#  CAF-Aligned Azure Landing Zone with Secure Application Delivery
+#  CAF-Aligned Azure Landing Zone with automated Infrastructure Deployment
 
-> Production-oriented Azure Landing Zone built with Terraform and GitHub Actions, implementing Microsoft Cloud Adoption Framework (CAF) principles, centralized governance, private-first networking, secure application delivery, and automated Infrastructure as Code deployment.
+> Production-oriented Azure Landing Zone built with Terraform and GitHub Actions, implementing Microsoft Cloud Adoption Framework (CAF) principles, centralized governance, private-first networking, and automated Infrastructure as Code deployment.
 
 ---
 
@@ -18,8 +18,7 @@ The solution follows core Microsoft Cloud Adoption Framework (CAF) recommendatio
 * Private Endpoints and Private DNS
 * Entra ID based access control
 * GitHub Actions CI/CD using OpenID Connect (OIDC)
-* Secure App Service workload deployment
-* Infrastructure and application lifecycle automation
+* Infrastructure deployment automation
 
 The objective is to showcase the responsibilities typically owned by Cloud Engineers, Platform Engineers, and DevOps Engineers in enterprise Azure environments.
 
@@ -36,7 +35,6 @@ The objective is to showcase the responsibilities typically owned by Cloud Engin
 | Observability          | Log Analytics, Diagnostic Settings, Activity Logs, Entra Logs, AMPLS        |
 | Infrastructure as Code | Modular Terraform Architecture                                              |
 | CI/CD                  | GitHub Actions with OIDC Federation                                         |
-| Application Platform   | Azure App Service integrated with Landing Zone services                     |
 | Data Services          | Azure SQL, Storage Account, Key Vault, Azure Container Registry             |
 | Operations             | Centralized Monitoring, Alerting, Backup Policies                           |
 
@@ -218,7 +216,7 @@ Action Groups provide centralized notification for operational events and monito
 
 ## CI/CD Pipeline
 
-Infrastructure and application deployment are automated through GitHub Actions.
+Infrastructure deployment is automated through GitHub Actions.
 
 ### Infrastructure Deployment
 
@@ -239,17 +237,6 @@ Features:
 * OIDC Authentication
 * Environment Variable Injection
 * Automated Infrastructure Deployment
-
-### Application Deployment
-
-The pipeline also deploys the sample web application to Azure App Service.
-
-Deployment integrates with:
-
-* Azure Container Registry
-* Managed Identity
-* Key Vault
-* Landing Zone networking controls
 
 ### Authentication Model
 
@@ -280,7 +267,6 @@ modules/
 ├── iam
 ├── paas-resources
 ├── compute
-└── app-service
 ```
 
 The solution follows a modular architecture that separates platform concerns into reusable Terraform modules.
@@ -386,4 +372,4 @@ Terraform state is stored remotely in Azure Storage to support collaboration, co
 
 ## Author
 
-Built as a cloud platform engineering project to demonstrate enterprise Azure architecture, Terraform automation, security, governance, and CI/CD delivery practices.
+Harsh Kathwadia

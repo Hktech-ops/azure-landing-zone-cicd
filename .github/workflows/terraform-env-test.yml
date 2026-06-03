@@ -1,14 +1,6 @@
-# CI/CD pipeline file for env - prod
+# GitHub actions workflow file for env - prod
 
 # -backend-config="use_azuread_auth=true"
-
-
-#      - name: Deploy SPA to App Service
-#        uses: azure/webapps-deploy@v2
-#        with:
-#          app-name: cnsolns-spa
-#          package: ../SPA
-
 
 # ----------------------------------
 

@@ -214,16 +214,4 @@ module "compute" {
 
 }
 
-/* module "app-service" {
-  source = "../../modules/app-service"
-
-  # from module: platform
-  rg_name = module.platform.rg_name
-  rg_location = module.platform.rg_location
-
-  # from module: monitoring
-  law_id = module.monitoring.law_id
-
-}
- */
 

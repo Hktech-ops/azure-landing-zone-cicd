@@ -6,15 +6,15 @@ module "platform" {
   source = "../../modules/platform"
 
   # keyed values in tfvars
-  subscription_id      = var.subscription_id       
+  subscription_id      = var.subscription_id
   tenant_root_group_id = var.tenant_root_group_id
 
   # keyed values in tfvars
-  rg_name = var.rg_name  
-  rg_location = var.rg_location   
+  rg_name     = var.rg_name
+  rg_location = var.rg_location
 
   # keyed values in tfvars
-  cnsolns_recovery_services_vault_name = var.cnsolns_recovery_services_vault_name 
+  cnsolns_recovery_services_vault_name = var.cnsolns_recovery_services_vault_name
 }
 
 
@@ -22,14 +22,14 @@ module "monitoring" {
   source = "../../modules/monitoring"
 
   # referenced from platform module
-  rg_name     = module.platform.rg_name     
+  rg_name     = module.platform.rg_name
   rg_location = module.platform.rg_location
 
   # keyed value in tfvars
   subscription_id = var.subscription_id
 
   # keyed value in tfvars
-  alert_reciever_email = var.alert_reciever_email   
+  alert_reciever_email = var.alert_reciever_email
 }
 
 
@@ -38,13 +38,13 @@ module "policies" {
 
   # referenced from platform module
   rg_location          = module.platform.rg_location
-  workloads_corp_mg_id = module.platform.workloads_corp_mg_id 
+  workloads_corp_mg_id = module.platform.workloads_corp_mg_id
 
   # referenced from monitoring module
-  law_id               = module.monitoring.law_id       
+  law_id = module.monitoring.law_id
 
   # keyed value in tfvars
-  subscription_id      = var.subscription_id
+  subscription_id = var.subscription_id
 }
 
 
@@ -57,11 +57,11 @@ module "hub-network" {
   source = "../../modules/hub-network"
 
   # referenced from platform module
-  rg_name     = module.platform.rg_name     
-  rg_location = module.platform.rg_location 
+  rg_name     = module.platform.rg_name
+  rg_location = module.platform.rg_location
 
   # Keyed values in tfvars
-  hub_vnet_name = var.hub_vnet_name
+  hub_vnet_name          = var.hub_vnet_name
   hub_vnet_address_space = var.hub_vnet_address_space
 
   firewall_subnet_name = var.firewall_subnet_name
@@ -77,7 +77,7 @@ module "hub-network" {
   private_endpoints_subnet_cidr = var.private_endpoints_subnet_cidr
 
   # referenced from monitoring module
-  law_id      = module.monitoring.law_id    
+  law_id = module.monitoring.law_id
 
 }
 
@@ -85,7 +85,7 @@ module "firewall-policies" {
   source = "../../modules/firewall-policies"
 
   # from module: platfrom
-  rg_name = module.platform.rg_name
+  rg_name     = module.platform.rg_name
   rg_location = module.platform.rg_location
 
   # from module: hub-network
@@ -103,18 +103,18 @@ module "firewall" {
   source = "../../modules/firewall"
 
   # from module: platform
-  rg_name = module.platform.rg_name
+  rg_name     = module.platform.rg_name
   rg_location = module.platform.rg_location
 
   # from module: monitoring
-  law_id = module.monitoring.law_id   
+  law_id = module.monitoring.law_id
 
   # from module: hub-network
-  firewall_subnet_id = module.hub-network.firewall_subnet_id  
+  firewall_subnet_id             = module.hub-network.firewall_subnet_id
   platform_firewall_public_ip_id = module.hub-network.platform_firewall_public_ip_id
 
   # from module: firewall-policies
-  platform_firewall_policy_id = module.firewall-policies.platform_firewall_policy_id  
+  platform_firewall_policy_id = module.firewall-policies.platform_firewall_policy_id
 }
 
 
@@ -122,11 +122,11 @@ module "spoke-network" {
   source = "../../modules/spoke-network"
 
   # from module: platform
-  rg_name                = module.platform.rg_name
-  rg_location            = module.platform.rg_location
+  rg_name     = module.platform.rg_name
+  rg_location = module.platform.rg_location
 
   # keyed values in tfvars
-  spoke_vnet_name = var.spoke_vnet_name
+  spoke_vnet_name          = var.spoke_vnet_name
   spoke_vnet_address_space = var.spoke_vnet_address_space
 
   app_subnet_name = var.app_subnet_name
@@ -142,12 +142,12 @@ module "spoke-network" {
   platform_firewall_private_ip_address = module.firewall.platform_firewall_private_ip_address
 
   # from module: monitoring
-  law_id                 = module.monitoring.law_id
+  law_id = module.monitoring.law_id
 
   # from module: hub-network
-  hub_vnet_name          = module.hub-network.hub_vnet_name
-  hub_vnet_id            = module.hub-network.hub_vnet_id
-  hub_vnet_address_space = module.hub-network.hub_vnet_address_space
+  hub_vnet_name                 = module.hub-network.hub_vnet_name
+  hub_vnet_id                   = module.hub-network.hub_vnet_id
+  hub_vnet_address_space        = module.hub-network.hub_vnet_address_space
   monitor_private_dns_zone_name = module.hub-network.monitor_private_dns_zone_name
   oms_private_dns_zone_name     = module.hub-network.oms_private_dns_zone_name
   ods_private_dns_zone_name     = module.hub-network.ods_private_dns_zone_name
@@ -158,16 +158,16 @@ module "spoke-network" {
 module "paas-resources" {
   source = "../../modules/paas-resources"
 
-  tenant_id                               = var.tenant_id
+  tenant_id = var.tenant_id
 
   mssql_sql_server_deploy_location = var.mssql_sql_server_deploy_location //keyed value in tfvars
 
   # from module: platform
-  rg_name                                 = module.platform.rg_name
-  rg_location                             = module.platform.rg_location
+  rg_name     = module.platform.rg_name
+  rg_location = module.platform.rg_location
 
   # from module: monitoring
-  law_id                                  = module.monitoring.law_id
+  law_id = module.monitoring.law_id
 
   # from module: iam
   key_vault_admins_group_object_id        = module.iam.key_vault_admins_group_object_id
@@ -198,17 +198,17 @@ module "compute" {
   cnsolns_recovery_services_vault_name = module.platform.cnsolns_recovery_services_vault_name
 
   # from module: monitoring
-  law_id                               = module.monitoring.law_id
-  
+  law_id = module.monitoring.law_id
+
   # from module: spoke-network
-  app_subnet_id                        = module.spoke-network.app_subnet_id
-  
+  app_subnet_id = module.spoke-network.app_subnet_id
+
   # from module: paas-resources
-  storage_account_uri                  = module.paas-resources.storage_account_uri
-  
+  storage_account_uri = module.paas-resources.storage_account_uri
+
   # from module: iam
-  vm_admins_group_object_id            = module.iam.vm_admins_group_object_id
-  
+  vm_admins_group_object_id = module.iam.vm_admins_group_object_id
+
   # keyed value in tfvars
   win_vm_private_ip_address = var.win_vm_private_ip_address
 

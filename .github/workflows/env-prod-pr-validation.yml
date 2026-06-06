@@ -56,8 +56,9 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # pr-validation should never use backend
       - name: Terraform Init (no backend)
-        run: terraform init -backend=false  # prvalidation should never use backend
+        run: terraform init -backend-config="local.backend.tf"  # forcing pr-validation to use local.backend.tf --> which is specifically provisioned for pr validation
 
       - name: Terraform Format check
         run: terraform fmt -check -recursive  # format check

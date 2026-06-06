@@ -49,6 +49,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # no backend config is mentioned - so it will use backend.tf as config
+      # actual backend values are passed here as secrets
       - name: Terraform Init (Backend Injection)
         run: |
           terraform init -upgrade \

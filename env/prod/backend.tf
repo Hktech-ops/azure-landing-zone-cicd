@@ -1,5 +1,9 @@
 # backend.tf for env: prod
 
+# Actual backend files will be stored in remote storage a/c - secrets passed in apply workflow file
+
+# ----------------------------------------------
+
 terraform {
 
   required_version = ">=1.3.0"

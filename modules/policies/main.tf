@@ -1,7 +1,20 @@
 # main.tf for module: policies
 
+
+/* All 3 pillars of Policy-as-Code are implemented here. 3 pillars are:
+
+- Policy initiatives (sets) : to bundle multiple policy definitions
+
+- Policy definitions : can be custom or built-in
+ - referenced them by definition id in the policy set
+
+- Policy assignments - at management group scope (or can be at subscption scope)
+
+ */
+
+
 /* 
-two policy initiatives containing policy definitions
+2 policy initiatives containing policy definitions
 
 2 policy sets/initiatives: platform-guidelines & monitoring-guidelines
     platform-guidelines --> contains 2 policy definitions - 'allowed locations' and 'require a (specified) tag - author and env tags

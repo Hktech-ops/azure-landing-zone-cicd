@@ -3,63 +3,73 @@
 /* 
 Goal is to create:
  - App registration (Entra / Azure AD App)
- - Federated Credential for GitHub
+
  - Service principal
+ 
+ - Federated Credential for GitHub
+ 
  - Roles/permissions to Service Principal
-  - Resource level (RBAC) roles at scope 'Subscription'
-  - Resource level (RBAC) + Entra ID roles at scope 'Tenant Root Group'
+    - Resource level (RBAC) roles at scope 'Subscription' - Contributor, Resource Policy Contributor & Storage Blob Data Contributor(for writing to remote backend)
+
+    - Resource level (RBAC) + Entra ID roles at scope 'Tenant Root Group' 
+      - MG contributor, User Access Administrator, Directory Reader
+      - Monitoring Contributor and Security Administrator
+  
   - Microsoft Graph API Permissions --> these are Tenant wide permissions - via portal ONLY, Admin concent granted
     - Directory.Read.All --> to read directory data - used in module: iam
     - Group.ReadWrite.All --> to read and write all groups - used in module: iam
 
-  - Storage Data Blob Contributor RBAC role to SP at scope 'Storage Account' --> Data Plane role for accssing Remote backend
 */
 
 /* Roles for service principal:
+
 Why these RBAC roles to SP?  
-** 2 RBAC roles at subscription scope - Contributor, Resource Policy Contributor, Storage Blob Data Contributor
-** 1 Data Plane role - Storage Blob Data Contributor at scope Storage Account - for accessing remote backend
+** 3 RBAC roles at subscription scope - Contributor, Resource Policy Contributor, Storage Blob Data Contributor
+  - Contributor
+    - Covers 95% of terraform operations such as create, update, delete, deploy resources etc... 
+  - Resource Policy Contributor
+    - Useful for policy assignments - policies module
+
+** 1 Data Plane role - Storage Blob Data Contributor at scope remote 'Storage Account' - for writing to remote backend
     Why? SP needs to access storage account for writing remote backend file
+    Note: This storage account was provisioned separately as a stand-alone SA - just for the purpose of storing remote backend
 
 
---> Each role covers specific capability that Terraform needs:
- - Contributor
-  - Covers 95% of terraform operations such as create, update, delete, deploy resources etc...
- - Resource Policy Contributor
-  - Useful for policy assignments - policies module
 
-
-IMP - identity (User/SP) provisioning Mangement Group (or any operations) under Tenant Root Group needs to have these 3 roles assigned at the Tenant Root group scope
+*** IMP - identity (User/SP) provisioning Mangement Group (or any operations) under Tenant Root Group needs to have these 3 roles assigned at the Tenant Root group scope
 
  - Management Group Contributor (RBAC role) - allows User/SP to create/modify/manage Management Groups
  - Directory Reader (Entra ID role) : allows User/SP to read tenant info
- - User Access Administrator (RBAC role) : allows assigning RBAC roles are MG, Subscription, Resources Scope
+ - User Access Administrator (RBAC role) : allows assigning RBAC roles at MG, Subscription, Resource Scope
 
 - If a user is a Global Admin - such as in my case, need to go to Entra ID > Properties and Turn ON Access management for Azure resources --> this will allow managing Tenant Root Group access controls (IAM)
 
 More roles - both for Monitoring module:
- - Monitoring Contributor (RBAC) role at Tenant RG scope
-  - Why? Monitoring Contributor grants Azure Monitor/RBAC permissions to create and manage the diagnostic settings
- - Security Administrator (Entra ID role) at Tenant RG scope
-  - Why? Security Administrator grants Entra security/diagnostic-plane access
+  - Monitoring Contributor (RBAC) role at Tenant RG scope
+    - Why? Monitoring Contributor grants Azure Monitor RBAC permissions to create and manage the diagnostic settings
+
+  - Security Administrator (Entra ID role) at Tenant RG scope
+    - Why? Security Administrator grants Entra security/diagnostic-plane access
 
 */
 
 /* 
-As the last bit in the Authorization process, I have added 
+As the last bit in the Authorization process (OIDC), I have added:
  - AZURE_CLIENT_ID
  - AZURE_SUBSCRIPTION_ID
  - AZURE_TENANT_ID
 in my Github repo > secrets and variables > actions 
 
-This completes both Azure part + GitHub part for 2 way comminication b/w Azure and Service Principal (GitHub)
+This completes both Azure part + GitHub part for 2 way communication b/w Azure and Service Principal (GitHub)
 */
 
 /* 
 Directory.Read.All
 Group.ReadWrite.All granted these 2 Graph API permissions to SP via portal!
  */
-# ----------------------------------------------
+
+# ---------------------------------------------------------------------------------
+
 
 # --------------------------
 # Create an App registration

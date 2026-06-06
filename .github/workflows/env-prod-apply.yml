@@ -1,8 +1,8 @@
 # GitHub actions workflow file for env - prod
 
-# -backend-config="use_azuread_auth=true"
+# Apply workflow can ONLY be triggered when a pull request is merged into main --> i.e. ONLY after prvalidation is manually APPROVED
 
-# ----------------------------------
+# -----------------------------------------------------------
 
 name: "Terraform init, fmt, plan and apply for provisioning infra in env - prod"
 
@@ -68,6 +68,6 @@ jobs:
         run: terraform plan -var-file="prod.tfvars"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var-file="prod.tfvars"
+        run: terraform apply -auto-approve -var-file="prod.tfvars"  # auto approve is safe as pr-validation is approved
 
 

@@ -1,0 +1,91 @@
+# GitHub workflow file for PR validation for env-prod
+
+# ----------------------------------------------------
+
+name: "Terraform PR Validation for env-prod"
+
+on:
+  pull_request:
+    paths:
+      - "**/*.tf"   # any change to any .tf files will trigger PR validation
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_USE_OIDC: true
+  ARM_SKIP_PROVIDER_REGISTRATION: true
+  INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
+
+jobs:
+  terraform-pr:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: env/prod  # set up to run in env/prod directory
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.5
+
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Install Infracost
+        run: curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init (no backend)
+        run: terraform init -backend=false  # prvalidation should never use backend
+
+      - name: Terraform Format check
+        run: terraform fmt -check -recursive  # format check
+
+      - name: TFLint
+        run: tflint --recursive   # check for code quality
+
+      - name: Checkov Scan (do not fail pipeline - just give report)     # security and compliance scan
+        run: checkov -d . --quiet --soft-fail                # DO NOT fail pipeline
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -var-file="prod.tfvars" -no-color > env-prod-plan.txt         
+
+      - name: Comment Terraform Plan on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: env-prod-plan.txt
+
+      - name: Generate Infracost breakdown        # generate infracost breakdown (FinOps)
+        run: infracost breakdown --path . --format json --out-file env-prod-infracost.json
+
+      - name: Post Infracost comment on PR           # post infracost comment on PR
+        run: infracost comment github \
+              --path env-prod-infracost.json \
+              --repo ${{ github.repository }} \
+              --pull-request ${{ github.event.pull_request.number }} \
+              --github-token ${{ secrets.GITHUB_TOKEN }} \
+              --behavior update

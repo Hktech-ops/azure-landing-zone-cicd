@@ -58,7 +58,7 @@ jobs:
 
       # pr-validation should never use backend
       - name: Terraform Init (no backend)
-        run: terraform init -backend-config="local.backend.tf"  # forcing pr-validation to use local.backend.tf --> which is specifically provisioned for pr validation
+        run: terraform init -backend-config="local.backend.prvalidation"  # forcing pr-validation to use local.backend.tf --> which is specifically provisioned for pr validation
 
       - name: Terraform Format check
         run: terraform fmt -check -recursive  # format check

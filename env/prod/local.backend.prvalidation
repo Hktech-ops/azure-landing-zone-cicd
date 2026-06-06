@@ -1,4 +1,4 @@
-# local backend config --> used for local backend duing pr-validation
+# local backend config --> ONLY used for local backend during pr-validation
 
 /* 
 Conceptually, PR valiadation should never touch remote (actual) backend

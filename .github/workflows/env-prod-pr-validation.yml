@@ -83,10 +83,12 @@ jobs:
       - name: Generate Infracost breakdown        # generate infracost breakdown (FinOps)
         run: infracost breakdown --path . --format json --out-file env-prod-infracost.json  # output file name
 
-      - name: Post Infracost comment on PR           # post infracost comment on PR
-        run: infracost comment github \
-              --path env/prod/env-prod-infracost.json \ 
-              --repo ${{ github.repository }} \
-              --pull-request ${{ github.event.pull_request.number }} \
-              --github-token ${{ secrets.GITHUB_TOKEN }} \
-              --behavior update
+      - name: Post Infracost comment on PR
+        run: |
+          infracost comment github \
+          --path env/prod/env-prod-infracost.json \
+          --repo "${{ github.repository }}" \
+          --pull-request "${{ github.event.pull_request.number }}" \
+          --github-token "${{ secrets.GITHUB_TOKEN }}" \
+          --behavior update
+

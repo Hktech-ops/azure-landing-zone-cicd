@@ -69,7 +69,8 @@ win_vm_private_ip_address = "192.168.0.4"
 # -----------------------------
 # Module: paas-resources
 # -----------------------------
-github_client_id = "74ed66a6-27ef-476d-b19a-c14a531e525d"
+github_client_id = "86d2ea15-3b7f-4942-bf2a-18b122096f26"
 
 mssql_sql_server_deploy_location = "canadacentral"
+
 

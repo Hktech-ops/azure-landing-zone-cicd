@@ -23,10 +23,10 @@ About Entra ID (directory) roles :
 
 # Define users - already present in Entra ID. Remember, you need to add users to entra id first
 data "azuread_user" "harsh" {
-  user_principal_name = "harsh@harshkathwadiagmail.onmicrosoft.com"
+  user_principal_name = "harsh@miketechnical70gmail.onmicrosoft.com"
 }
-data "azuread_user" "john" {
-  user_principal_name = "johndoe@harshkathwadiagmail.onmicrosoft.com"
+data "azuread_user" "mike" {
+  user_principal_name = "miketechnical70_gmail.com#EXT#@miketechnical70gmail.onmicrosoft.com"
 }
 
 

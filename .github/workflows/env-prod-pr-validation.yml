@@ -80,8 +80,9 @@ jobs:
         with:
           path: env/prod/env-prod-plan.txt  # plan will be saved in env/prod with the given name
 
-      - name: Generate Infracost breakdown        # generate infracost breakdown (FinOps)
-        run: infracost breakdown --path . --format json --out-file env-prod-infracost.json  # output file name
+      - name: Generate Infracost breakdown        # generate infracost breakdown at repo root (FinOps)
+        run: infracost breakdown --path $GITHUB_WORKSPACE --format json --out-file env-prod-infracost.json  # output file name
+        # $GITHUB_WORKSPACE ensures that entire repo is scanned for cost breakdown
 
       - name: Post Infracost comment on PR
         run: |

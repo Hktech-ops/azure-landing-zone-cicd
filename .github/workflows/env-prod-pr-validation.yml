@@ -81,13 +81,13 @@ jobs:
           path: env/prod/env-prod-plan.txt  # plan will be saved in env/prod with the given name
 
       - name: Generate Infracost breakdown        # generate infracost breakdown at repo root (FinOps)
-        working-directory: $GITHUB_WORKSPACE
+        working-directory: ../..
         run: infracost breakdown --path $GITHUB_WORKSPACE --format json --out-file env-prod-infracost.json  # output file name
         # $GITHUB_WORKSPACE ensures that entire repo is scanned for cost breakdown
         # infracost file will be created in repo root
 
       - name: Move Infracost file into env/prod
-        run: mv $GITHUB_WORKSPACE/env-prod-infracost.json env/prod/   # move infracost file to this location
+        run: mv env-prod-infracost.json env/prod/   # move infracost file to this location
 
       - name: Post Infracost comment on PR
         run: |

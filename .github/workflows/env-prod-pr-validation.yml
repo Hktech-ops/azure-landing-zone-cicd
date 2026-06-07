@@ -78,14 +78,14 @@ jobs:
       - name: Comment Terraform Plan on PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: env-prod-plan.txt
+          path: env/prod/env-prod-plan.txt  # plan will be saved in env/prod with the given name
 
       - name: Generate Infracost breakdown        # generate infracost breakdown (FinOps)
-        run: infracost breakdown --path . --format json --out-file env-prod-infracost.json
+        run: infracost breakdown --path . --format json --out-file env-prod-infracost.json  # output file name
 
       - name: Post Infracost comment on PR           # post infracost comment on PR
         run: infracost comment github \
-              --path env-prod-infracost.json \
+              --path env/prod/env-prod-infracost.json \ 
               --repo ${{ github.repository }} \
               --pull-request ${{ github.event.pull_request.number }} \
               --github-token ${{ secrets.GITHUB_TOKEN }} \

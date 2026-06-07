@@ -87,7 +87,7 @@ jobs:
         # infracost file will be created in repo root
 
       - name: Move Infracost file into env/prod
-        run: mv env-prod-infracost.json env/prod/   # move infracost file to this location
+        run: mv ../env-prod-infracost.json env/prod   # move infracost file to this location
 
       - name: Post Infracost comment on PR
         run: |

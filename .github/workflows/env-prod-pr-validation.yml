@@ -91,7 +91,7 @@ jobs:
       - name: Post Infracost comment on PR
         run: |
           infracost comment github \
-          --path env/prod/env-prod-infracost.json \
+          --path env-prod-infracost.json \
           --repo "${{ github.repository }}" \
           --pull-request "${{ github.event.pull_request.number }}" \
           --github-token "${{ secrets.GITHUB_TOKEN }}" \

@@ -110,7 +110,7 @@ The target subscription is placed under the **Corp** management group, inheritin
 | AzureBastionSubnet | Azure Bastion |
 | Private Endpoint Subnet | Centralized Private Endpoints |
 | Gateway Subnet | Azure Gateway |
-| Reserved Space| Future expansion |
+| Reserved Space|
 
 ### Spoke Network — `192.168.0.0/22`
 

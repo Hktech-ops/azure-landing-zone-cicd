@@ -2,7 +2,7 @@
 
 > Production-oriented Azure Landing Zone built with Terraform and GitHub Actions, implementing Microsoft Cloud Adoption Framework (CAF) principles, centralized governance, private-first networking, and automated Infrastructure as Code deployment.
 
----
+----
 
 ## Overview
 
@@ -58,9 +58,7 @@ The platform was designed around several core principles commonly used in enterp
 
 ### Private-by-Default
 
-All critical PaaS services are exposed through Private Endpoints.
-
-Public access is disabled wherever possible.
+All critical PaaS services are exposed through Private Endpoints. Public access is disabled.
 
 Services include:
 
@@ -349,7 +347,6 @@ Potential next steps include:
 * Microsoft Sentinel
 * Multi-environment promotion pipelines
 * AKS workload deployment
-* Customer Managed Keys (CMK)
 * Blue/Green deployment strategy
 
 ---

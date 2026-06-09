@@ -17,7 +17,7 @@ The solution is built entirely through Infrastructure as Code and automated CI/C
 - **Security** — Entra ID–only authentication, RBAC authorization, Managed Identities, private-by-default architecture
 - **Observability** — Centralized Log Analytics, diagnostic settings, Entra audit/sign-in logs, AMPLS
 - **Automation** — Modular Terraform with remote state, GitHub Actions CI/CD via OIDC federation
-- **Data & Compute** — Azure SQL, Storage Account, Key Vault, Azure Container Registry, VM
+- **Data & Compute** — Azure SQL, Storage Account, Key Vault, Azure Container Registry & VM
 
 ---
 
@@ -106,19 +106,19 @@ The target subscription is placed under the **Corp** management group, inheritin
 
 | Subnet | Purpose |
 |---|---|
-| AzureFirewallSubnet | Azure Firewall (Standard) |
+| AzureFirewallSubnet | Azure Firewall |
 | AzureBastionSubnet | Azure Bastion |
 | Private Endpoint Subnet | Centralized Private Endpoints |
-| AMPLS Subnet | Azure Monitor Private Link Scope |
-| Private DNS Subnet | Private DNS resolver integration |
+| Gateway Subnet | Azure Gateway |
+| Reserved Space| Future expansion |
 
 ### Spoke Network — `192.168.0.0/22`
 
 | Subnet | Purpose |
 |---|---|
 | App Service Subnet | App Service integration |
-| Compute Subnet | Virtual Machines / VMSS |
-| Reserved | Future workload expansion |
+| Compute Subnet | Virtual Machine / VMSS |
+| Reserved Space| Future expansion |
 
 **Routing:** A default route (`0.0.0.0/0 → Next Hop: Azure Firewall`) is applied to all spoke subnets via UDRs, ensuring no resource can bypass the firewall for outbound traffic.
 

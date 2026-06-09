@@ -56,8 +56,9 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # pr-validation should never use backend
       - name: Terraform Init (no backend)
-        run: terraform init -backend=false  # prvalidation should never use backend
+        run: terraform init -backend=false  # forcing pr-validation to use local.backend.tf --> which is specifically provisioned for pr validation
 
       - name: Terraform Format check
         run: terraform fmt -check -recursive  # format check
@@ -77,15 +78,27 @@ jobs:
       - name: Comment Terraform Plan on PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: env-prod-plan.txt
+          path: env/prod/env-prod-plan.txt  # plan will be saved in env/prod with the given name
 
-      - name: Generate Infracost breakdown        # generate infracost breakdown (FinOps)
-        run: infracost breakdown --path . --format json --out-file env-prod-infracost.json
+      - name: Generate Infracost breakdown (full repo)
+        run: |
+          cd $GITHUB_WORKSPACE
+          infracost breakdown \
+          --path . \
+          --format json \
+          --out-file env/prod/env-prod-infracost.json
 
-      - name: Post Infracost comment on PR           # post infracost comment on PR
-        run: infracost comment github \
-              --path env-prod-infracost.json \
-              --repo ${{ github.repository }} \
-              --pull-request ${{ github.event.pull_request.number }} \
-              --github-token ${{ secrets.GITHUB_TOKEN }} \
-              --behavior update
+      - name: Post Infracost comment on PR
+        run: |
+          infracost comment github \
+          --path env-prod-infracost.json \
+          --repo "${{ github.repository }}" \
+          --pull-request "${{ github.event.pull_request.number }}" \
+          --github-token "${{ secrets.GITHUB_TOKEN }}" \
+          --behavior update
+
+      - name: Upload Infracost JSON as artifact   # uploaded infracost file from PR artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: infracost-output
+          path: env/prod/env-prod-infracost.json

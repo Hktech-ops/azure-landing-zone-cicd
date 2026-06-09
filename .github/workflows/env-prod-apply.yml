@@ -10,7 +10,7 @@ on:
   push:
     branches:
       - main
-    paths:
+    paths:              # it should only run when something that affects the prod env changes
       - "env/prod/**"
       - "modules/**"
 
@@ -49,6 +49,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      # no backend config is mentioned - so it will use backend.tf as config
+      # actual backend values are passed here as secrets
       - name: Terraform Init (Backend Injection)
         run: |
           terraform init -upgrade \
@@ -64,10 +66,10 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
-        run: terraform plan -var-file="prod.tfvars"
+      - name: Terraform Plan (save output)
+        run: terraform plan -var-file="prod.tfvars" -out=tfplan
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -var-file="prod.tfvars"  # auto approve is safe as pr-validation is approved
+      - name: Terraform Apply         # auto approve is safe as pr-validation is approved
+        run: terraform apply -auto-approve tfplan   # makes sure approved plan is applied
 
 

@@ -15,10 +15,10 @@ variable "tenant_id" {
   type = string
 }
 variable "rg_name" {
-  type    = string
+  type = string
 }
 variable "rg_location" {
-  type    = string
+  type = string
 }
 variable "cnsolns_recovery_services_vault_name" {
   type = string
@@ -36,32 +36,32 @@ variable "alert_reciever_email" {
 # Module: hub-network
 # -----------------------------
 variable "hub_vnet_name" {
-  type        = string
+  type = string
 }
 variable "hub_vnet_address_space" {
   type = list(string)
 }
 # Subnets
 variable "firewall_subnet_name" {
-  type        = string
+  type = string
 }
 variable "firewall_subnet_cidr" {
   type = list(string)
 }
 variable "bastion_subnet_name" {
-  type        = string
+  type = string
 }
 variable "bastion_subnet_cidr" {
   type = list(string)
 }
 variable "gateway_subnet_name" {
-  type        = string
+  type = string
 }
 variable "gateway_subnet_cidr" {
   type = list(string)
 }
 variable "private_endpoints_subnet_name" {
-  type        = string
+  type = string
 }
 variable "private_endpoints_subnet_cidr" {
   type = list(string)
@@ -107,11 +107,11 @@ variable "win_vm_private_ip_address" {
 # Module: paas-resources (*********)
 # -----------------------------
 variable "github_client_id" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "mssql_sql_server_deploy_location" {
-  type = string
+  type    = string
   default = null
 }

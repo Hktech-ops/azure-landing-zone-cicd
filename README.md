@@ -1,42 +1,23 @@
-#  CAF-Aligned Azure Landing Zone with automated Infrastructure Deployment
+# CAF-Aligned Azure Landing Zone with Automated Infrastructure Deployment
 
-> Production-oriented Azure Landing Zone built with Terraform and GitHub Actions, implementing Microsoft Cloud Adoption Framework (CAF) principles, centralized governance, private-first networking, and automated Infrastructure as Code deployment.
+> Production-grade Azure Landing Zone built with Terraform and GitHub Actions, implementing Microsoft Cloud Adoption Framework (CAF) best practices — featuring centralized governance, private-first networking, Policy-as-Code, and a fully automated CI/CD pipeline with secretless authentication.
 
 ---
 
 ## Overview
 
-This project demonstrates the design and deployment of a modern Azure Landing Zone using Terraform and GitHub Actions.
+This project delivers a complete Azure Landing Zone designed to demonstrate the infrastructure engineering capabilities expected of Cloud, Platform, and DevOps Engineers in enterprise environments — particularly regulated industries such as banking, insurance, and fintech.
 
-The solution follows core Microsoft Cloud Adoption Framework (CAF) recommendations and incorporates:
+The solution is built entirely through Infrastructure as Code and automated CI/CD, covering the full lifecycle from management group hierarchy through to application workload deployment.
 
-* Management Group hierarchy
-* Hub-Spoke networking
-* Azure Firewall and Bastion
-* Azure Policy governance
-* Centralized monitoring and diagnostics
-* Private Endpoints and Private DNS
-* Entra ID based access control
-* GitHub Actions CI/CD using OpenID Connect (OIDC)
-* Infrastructure deployment automation
+**Core pillars implemented:**
 
-The objective is to showcase the responsibilities typically owned by Cloud Engineers, Platform Engineers, and DevOps Engineers in enterprise Azure environments.
-
----
-
-## Key Capabilities
-
-| Domain                 | Implementation                                                              |
-| ---------------------- | --------------------------------------------------------------------------- |
-| Governance             | Management Groups, Policy Initiatives, Tag Enforcement, Region Restrictions |
-| Networking             | Hub-Spoke Architecture, Azure Firewall, Bastion, UDRs, NSGs                 |
-| Security               | Private Endpoints, Private DNS, Entra RBAC, Managed Identities              |
-| Identity               | Entra Security Groups, Least Privilege Access, Entra-only Authentication    |
-| Observability          | Log Analytics, Diagnostic Settings, Activity Logs, Entra Logs, AMPLS        |
-| Infrastructure as Code | Modular Terraform Architecture                                              |
-| CI/CD                  | GitHub Actions with OIDC Federation                                         |
-| Data Services          | Azure SQL, Storage Account, Key Vault, Azure Container Registry             |
-| Operations             | Centralized Monitoring, Alerting, Backup Policies                           |
+- **Governance** — Management Group hierarchy, Azure Policy initiatives, mandatory tagging, region restrictions
+- **Networking** — Hub-Spoke topology with Azure Firewall, Azure Bastion, forced tunneling, and Private Endpoints
+- **Security** — Entra ID–only authentication, RBAC authorization, Managed Identities, private-by-default architecture
+- **Observability** — Centralized Log Analytics, diagnostic settings, Entra audit/sign-in logs, AMPLS
+- **Automation** — Modular Terraform with remote state, GitHub Actions CI/CD via OIDC federation
+- **Data & Compute** — Azure SQL, Storage Account, Key Vault, Azure Container Registry & VM
 
 ---
 
@@ -54,52 +35,49 @@ The objective is to showcase the responsibilities typically owned by Cloud Engin
 
 ## Architecture Principles
 
-The platform was designed around several core principles commonly used in enterprise Azure environments:
-
 ### Private-by-Default
 
-All critical PaaS services are exposed through Private Endpoints.
+All critical PaaS services are accessible exclusively through Private Endpoints. Public network access is explicitly disabled at the resource level. This eliminates data exfiltration risk and ensures all traffic stays within the Azure backbone.
 
-Public access is disabled wherever possible.
+**Services secured with Private Endpoints:**
 
-Services include:
-
-* Azure Key Vault
-* Azure SQL Database
-* Azure Container Registry
-* Azure Storage Account
-* Azure Monitor
+- Azure Key Vault
+- Azure SQL Database
+- Azure Container Registry
+- Azure Storage Account
+- Azure Monitor (via AMPLS)
 
 ### Centralized Connectivity
 
-Shared networking services are hosted within the Hub VNet:
+Shared networking infrastructure is hosted within a dedicated Hub VNet, providing a single control point for ingress, egress, and inspection:
 
-* Azure Firewall
-* Azure Bastion
-* Private Endpoint Subnet
-* Azure Monitor Private Link Scope (AMPLS)
+- Azure Firewall — all outbound traffic inspected and controlled
+- Azure Bastion — jumpbox-free administrative access
+- Private Endpoint Subnet — centralized PE deployment model
+- Azure Monitor Private Link Scope (AMPLS) — private ingestion of monitoring data
+- Private DNS Zones — linked to both Hub and Spoke VNets for seamless resolution
 
-Workloads are deployed within isolated Spoke VNets.
+Workloads are deployed in isolated Spoke VNets with no direct outbound internet access. All traffic is forced through the Hub via User Defined Routes (UDRs).
 
 ### Governance First
 
-Resource deployment is governed through:
+Resource deployment is governed at scale through:
 
-* Management Groups
-* Azure Policy Initiatives
-* Mandatory Tagging
-* Region Restrictions
-* Diagnostic Enforcement Policies
+- **Management Groups** — structured hierarchy for policy inheritance
+- **Azure Policy Initiatives** — custom and built-in policies enforced at the Corp management group
+- **Mandatory Tagging** — cost tracking and resource classification enforced via policy
+- **Region Restrictions** — resource creation limited to approved Azure regions
+- **Diagnostic Enforcement** — all supported resources automatically send logs to the central Log Analytics workspace
 
 ### Identity-Centric Security
 
-The platform avoids credential-based administration where possible through:
+The platform eliminates static credentials wherever possible:
 
-* Managed Identities
-* Entra Security Groups
-* RBAC Authorization
-* Entra Authentication for SQL
-* Entra Login for Windows
+- **Managed Identities** — assigned to Azure resources for service-to-service authentication
+- **Entra Security Groups** — RBAC role assignments scoped to groups, not individual users
+- **RBAC Authorization** — Key Vault uses Azure RBAC instead of access policies
+- **Entra-only Authentication** — Azure SQL configured with `azuread_authentication_only = true`; no SQL logins
+- **Entra Login for Windows** — Azure VMs joined to Entra ID for credential-free administration
 
 ---
 
@@ -107,7 +85,7 @@ The platform avoids credential-based administration where possible through:
 
 ### Management Group Hierarchy
 
-```text
+```
 Tenant Root Group
 ├── Platform
 │   ├── Identity
@@ -118,40 +96,31 @@ Tenant Root Group
     └── Online
 ```
 
-The subscription is associated to the Corp Management Group and inherits governance controls through policy assignments.
+The target subscription is placed under the **Corp** management group, inheriting all policy assignments and governance controls defined at the Platform and Workloads levels.
 
 ---
 
 ## Network Architecture
 
-### Hub Network
+### Hub Network — `10.0.0.0/22`
 
-```text
-10.0.0.0/22
-```
+| Subnet | Purpose |
+|---|---|
+| AzureFirewallSubnet | Azure Firewall |
+| AzureBastionSubnet | Azure Bastion |
+| Private Endpoint Subnet | Centralized Private Endpoints |
+| Gateway Subnet | Azure Gateway |
+| Reserved Space|
 
-Contains:
+### Spoke Network — `192.168.0.0/22`
 
-* Azure Firewall
-* Azure Bastion
-* Private Endpoint Subnet
-* Azure Monitor Private Link Scope
-* Private DNS Services
+| Subnet | Purpose |
+|---|---|
+| App Service Subnet | App Service integration |
+| Compute Subnet | Virtual Machine / VMSS |
+| Reserved Space| Future expansion |
 
-### Spoke Network
-
-```text
-192.168.0.0/22
-```
-
-Contains:
-
-* Application Workloads
-* App Service Integration
-* Compute Resources
-* Future Platform Expansion
-
-All outbound traffic is routed through Azure Firewall using User Defined Routes.
+**Routing:** A default route (`0.0.0.0/0 → Next Hop: Azure Firewall`) is applied to all spoke subnets via UDRs, ensuring no resource can bypass the firewall for outbound traffic.
 
 ---
 
@@ -159,217 +128,225 @@ All outbound traffic is routed through Azure Firewall using User Defined Routes.
 
 ### Network Security
 
-* Azure Firewall Standard
-* DNAT for controlled inbound publishing
-* NSGs on all workload subnets
-* Forced tunneling through Firewall
-* No public IPs on workload resources
-* Azure Bastion for administrative access
+- Azure Firewall Standard with DNAT rules for controlled inbound publishing
+- Network Security Groups (NSGs) on all workload subnets
+- Forced tunneling through Azure Firewall — no direct outbound internet
+- No public IP addresses on any workload resource
+- Azure Bastion for all administrative RDP/SSH access — no public RDP/SSH ports
 
 ### Platform Security
 
-* Key Vault RBAC authorization
-* ACR admin account disabled
-* SQL Entra-only authentication
-* Purge Protection enabled
-* Storage public access disabled
-* TLS 1.2 enforced
+| Control | Implementation |
+|---|---|
+| Key Vault | RBAC authorization, purge protection enabled |
+| Azure Container Registry | Admin account disabled, private endpoint only |
+| Azure SQL | Entra-only authentication, private endpoint |
+| Storage Account | Public access disabled, private endpoint for all services |
+| TLS Enforcement | Minimum TLS 1.2 enforced across all applicable services |
 
 ### Private Connectivity
 
-Private Endpoints are deployed for:
+Private DNS Zones are created and linked to both Hub and Spoke VNets for each Private Endpoint, ensuring name resolution remains internal to the virtual network fabric:
 
-* Azure Key Vault
-* Azure SQL
-* Azure Storage
-* Azure Container Registry
-* Azure Monitor
-
-Private DNS Zones are linked to both Hub and Spoke VNets to ensure private resolution across the platform.
+- `privatelink.vaultcore.azure.net`
+- `privatelink.database.windows.net`
+- `privatelink.blob.core.windows.net`
+- `privatelink.azurecr.io`
+- `privatelink.monitor.azure.com`
+- `privatelink.oms.opinsights.azure.com` - no public ingestion of logs
+- `privatelink.ods.opinsights.azure.com` - no public query of logs
 
 ---
 
 ## Monitoring & Observability
 
-Centralized observability is implemented through:
-
 ### Log Analytics Workspace
 
-Collects:
+Centralized log ingestion for the entire platform:
 
-* Azure Activity Logs
-* Azure Firewall Logs
-* NSG Logs
-* Entra Audit Logs
-* Entra Sign-In Logs
-* Resource Diagnostic Logs
+| Log Source | Type |
+|---|---|
+| Azure Activity Log | Subscription-level operations |
+| Azure Firewall | Network flow logs |
+| Network Security Groups | NSG flow logs |
+| Entra ID | Audit logs, Sign-in logs |
+| Azure Resources | Diagnostic settings for all supported resource types |
 
 ### Azure Monitor Private Link Scope (AMPLS)
 
-Monitoring traffic remains on private network paths and does not traverse public endpoints.
+All monitoring traffic — log ingestion, metric collection, and querying — traverses the private network backbone via AMPLS, eliminating data exfiltration over the public internet.
 
 ### Alerting
 
-Action Groups provide centralized notification for operational events and monitoring alerts.
+Action Groups are configured for operational alerting, with notifications routed to the appropriate response channels - email trigger in this case.
 
 ---
 
 ## CI/CD Pipeline
 
-Infrastructure deployment is automated through GitHub Actions.
+Infrastructure deployment is fully automated through GitHub Actions using a two-workflow strategy that enforces quality gates before any production change.
 
-### Infrastructure Deployment
+### Workflow 1: PR Validation (`env-prod-pr-validation.yml`)
 
-Terraform workflow performs:
+Triggered on every pull request that modifies Terraform files under `env/prod/` or `modules/`. This workflow runs **7 quality gates** before a reviewer ever sees the PR:
 
-```text
-Validate
+| Step | Tool | Purpose |
+|---|---|---|
+| Format Check | `terraform fmt -check` | Enforces consistent HCL formatting |
+| Code Linting | TFLint | Detects provider-specific issues and anti-patterns |
+| Security Scan | Checkov (soft-fail) | Scans for 700+ cloud security misconfigurations |
+| Validation | `terraform validate` | Confirms syntax and internal reference correctness |
+| Cost Estimation | Infracost | Estimates monthly cost of proposed changes — posted as a PR comment |
+| Terraform Plan | `terraform plan` | Generates the full execution plan |
+| Plan Comment | Sticky PR Comment | Posts the plan output directly on the PR for reviewer visibility |
+
+**Why this matters:** Every change is linted, security-scanned, cost-estimated, and planned before a human reviews it. The sticky comment and Infracost comment give reviewers full context without leaving GitHub.
+
+### Workflow 2: Production Apply (`env-prod-apply.yml`)
+
+Triggered automatically when a pull request is merged to `main` with changes under `env/prod/` or `modules/`.
+
+```
+PR Merged → main
     ↓
-Plan
+Terraform Init (remote state, OIDC auth)
     ↓
-Apply
+Terraform Validate
+    ↓
+Terraform Plan
+    ↓
+Terraform Apply
 ```
 
-Features:
+**Key features:**
 
-* Remote Terraform State
-* State Locking
-* OIDC Authentication
-* Environment Variable Injection
-* Automated Infrastructure Deployment
+- **Remote State** — State stored in Azure Storage with locking for team collaboration
+- **OIDC Authentication** — GitHub Actions authenticates to Azure via OpenID Connect federation; no client secrets stored in GitHub
+- **Backend Injection** — Storage account details injected via GitHub Secrets at runtime, not hardcoded in the repository
+- **Path Filtering** — Workflow only triggers on actual infrastructure changes, not documentation or unrelated files
 
 ### Authentication Model
 
-GitHub Actions authenticates to Azure using OpenID Connect (OIDC).
+```
+GitHub Actions (OIDC Token)
+    ↓
+Azure AD (Federated Identity Credential)
+    ↓
+Azure Resource Manager
+```
 
-Benefits:
+**Benefits of OIDC:**
 
-* No client secrets stored in GitHub
-* Short-lived federated tokens
-* Reduced credential management overhead
-* Enterprise security best practice
+- No long-lived client secrets stored in GitHub Secrets
+- Short-lived tokens (auto-refreshed per job)
+- Federated identity credential eliminates service principal password rotation
+- Industry best practice for CI/CD security in enterprise environments
 
 ---
 
 ## Terraform Architecture
 
-```text
-envs/
+### Module Structure
+
+```
+env/
 └── prod/
+    ├── main.tf          # Root module — orchestrates all child modules
+    ├── backend.tf        # Remote state configuration
+    ├── providers.tf      # Provider configuration with OIDC
+    ├── variables.tf      # Environment-specific variables
+    └── prod.tfvars       # Production variable values
 
 modules/
-├── platform
-├── monitoring
-├── hub-network
-├── spoke-network
-├── firewall-policies
-├── policies
-├── iam
-├── paas-resources
-├── compute
+├── platform              # Management groups, policy assignments, RBAC
+├── monitoring            # Log Analytics workspace, diagnostics, AMPLS
+├── hub-network           # Hub VNet, firewall, bastion, private DNS
+├── spoke-network         # Spoke VNet, subnets, peering, UDRs
+├── firewall-policies     # Firewall policy rules, DNAT, network/application rules
+├── policies              # Custom policy definitions, initiatives, assignments
+├── iam                   # Entra security groups, role assignments
+├── paas-resources        # Key Vault, SQL, Storage, ACR, App Service
+└── compute               # Virtual machines, VMSS
 ```
 
-The solution follows a modular architecture that separates platform concerns into reusable Terraform modules.
+### Design Decisions
 
----
-
-## Application Workload
-
-The landing zone hosts a sample application deployed through App Service.
-
-The application demonstrates:
-
-* CI/CD driven deployment
-* Secure platform consumption
-* Managed Identity integration
-* Private-first architecture patterns
+| Decision | Rationale |
+|---|---|
+| **Separate modules per concern** | Enables independent testing, reuse across environments, and clear dependency chains |
+| **Remote state with locking** | Prevents concurrent state corruption in team workflows |
+| **Backend config injected at runtime** | Keeps storage credentials out of version control |
+| **`-var-file` per environment** | Clean separation of environment-specific values from module logic |
+| **No hardcoded resource names in modules** | All names passed as variables — modules remain reusable |
 
 ---
 
 ## Key Engineering Decisions
 
-| Decision               | Rationale                                  |
-| ---------------------- | ------------------------------------------ |
-| Hub-Spoke Architecture | Scalable network segmentation model        |
-| Azure Firewall         | Centralized ingress and egress control     |
-| Private Endpoints      | Eliminate public exposure of PaaS services |
-| OIDC Federation        | Secretless GitHub authentication           |
-| Managed Identities     | Reduce credential management               |
-| Azure Policy           | Governance at scale                        |
-| RBAC Authorization     | Modern Azure access control model          |
-| Centralized Logging    | Unified operational visibility             |
+| Decision | Rationale |
+|---|---|
+| Hub-Spoke Architecture | Industry-standard network segmentation; scales to multiple workloads |
+| Azure Firewall | Centralized policy enforcement for egress traffic |
+| Private Endpoints | Eliminates public exposure of PaaS services; meets compliance requirements |
+| OIDC Federation | Secretless authentication for CI/CD; no credential rotation overhead |
+| Managed Identities | Removes static credentials from application configuration |
+| Azure Policy | Enforces governance at scale without manual intervention |
+| RBAC Authorization | Modern, group-based access control for Azure resources |
+| Centralized Logging | Single pane of glass for security and operational events |
+| Checkov + TFLint in CI/CD | Catches misconfigurations before they reach Azure |
+| Infracost in PRs | Embeds FinOps awareness into the development workflow |
 
 ---
 
 ## Skills Demonstrated
 
-### Azure
+### Azure Platform
 
-* Azure Landing Zones
-* Management Groups
-* Azure Policy
-* Azure Firewall
-* Azure Bastion
-* Azure Monitor
-* Private Link
-* App Service
-* Azure SQL
-* Key Vault
-* Azure Container Registry
+Azure Landing Zones, Management Groups, Azure Policy, Azure Firewall, Azure Bastion, Azure Monitor, Private Link, App Service, Azure SQL, Key Vault, Azure Container Registry, Log Analytics, Entra ID, RBAC, Managed Identities, Private DNS, Virtual Network Peering, Network Security Groups, Route Tables
 
 ### Infrastructure as Code
 
-* Terraform
-* Modular Architecture
-* Remote State Management
-* Dependency Management
+Terraform (HCL), Modular Architecture, Remote State Management, State Locking, Dependency Management, Variable Separation, Terraform Registry
 
-### DevOps
+### DevOps & CI/CD
 
-* GitHub Actions
-* OIDC Federation
-* CI/CD Automation
-* Infrastructure Deployment Pipelines
+GitHub Actions, OIDC Federation, Workflow Orchestration, Quality Gates (TFLint, Checkov, Infracost), Sticky PR Comments, Secret Management, Backend Injection, Path-Based Triggers
 
-### Security
+### Security & Compliance
 
-* Zero Trust Principles
-* Least Privilege Access
-* Private Connectivity
-* Identity-Based Authentication
+Zero Trust Principles, Least Privilege Access, Private Connectivity, Identity-Based Authentication, Policy-as-Code, Compliance Scanning, Cost Governance (FinOps)
 
 ---
 
 ## Future Enhancements
 
-Potential next steps include:
-
-* Application Gateway WAF
-* Azure Defender for Cloud
-* Microsoft Sentinel
-* Multi-environment promotion pipelines
-* AKS workload deployment
-* Customer Managed Keys (CMK)
-* Blue/Green deployment strategy
+- **Application Gateway WAF** — Layer 7 ingress with web application firewall
+- **Microsoft Defender for Cloud** — Advanced threat protection and regulatory compliance scoring
+- **AKS Workload Deployment** — Containerized workloads with private cluster integration
+- **Blue/Green Deployment Strategy** — Zero-downtime infrastructure updates
 
 ---
 
 ## Deployment
 
 ```bash
-cd envs/prod
+# Navigate to the target environment
+cd env/prod
 
+# Initialize with remote state backend
 terraform init
 
-terraform plan -var-file="terraform.tfvars"
+# Review the execution plan
+terraform plan -var-file="prod.tfvars"
 
-terraform apply -var-file="terraform.tfvars"
+# Apply the infrastructure
+terraform apply -var-file="prod.tfvars"
 ```
 
-Terraform state is stored remotely in Azure Storage to support collaboration, consistency, and state locking.
+Terraform state is stored remotely in Azure Storage with state locking enabled, supporting team collaboration and preventing concurrent execution conflicts.
 
 ---
 
 ## Author
 
-Harsh Kathwadia
+**Harsh Kathwadia** — Cloud / Platform / DevOps Engineer

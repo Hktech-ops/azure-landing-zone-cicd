@@ -51,7 +51,7 @@ All critical PaaS services are accessible exclusively through Private Endpoints.
 
 Shared networking infrastructure is hosted within a dedicated Hub VNet, providing a single control point for ingress, egress, and inspection:
 
-- Azure Firewall (Standard) — all outbound traffic inspected and controlled
+- Azure Firewall — all outbound traffic inspected and controlled
 - Azure Bastion — jumpbox-free administrative access
 - Private Endpoint Subnet — centralized PE deployment model
 - Azure Monitor Private Link Scope (AMPLS) — private ingestion of monitoring data
